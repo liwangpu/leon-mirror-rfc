@@ -1,0 +1,9 @@
+{
+    "title": "student_list_tab",
+    "control": "tab",
+    "content": [
+       {
+           "key":"student_list_grid"
+       }
+    ]
+}
