@@ -5,7 +5,10 @@
         "control": "blank-layout",
         "content": [
             {
-                "key":"student_list_tab"
+                "key": "student_edit_form"
+            },
+            {
+                "key": "student_list_tab"
             }
         ]
     }

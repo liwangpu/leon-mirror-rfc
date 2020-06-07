@@ -1,6 +1,4 @@
 {
     "title": "student_list_grid",
-    "control": "grid",
-    "content": [
-    ]
+    "control": "grid"
 }

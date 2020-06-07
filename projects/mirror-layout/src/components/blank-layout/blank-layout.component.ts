@@ -23,16 +23,12 @@ export class BlankLayoutComponent extends DynamicComponent implements AfterViewI
         super(injector);
     }
 
-    protected async render(): Promise<void> {
-        // console.log('blank layout start render');
-    }
-
     public async ngAfterViewInit(): Promise<void> {
-        await this.startup();
+        await super.ngAfterViewInit();
     }
 
-    public ngOnDestroy(): void {
-        this.destroy();
+    public async ngOnDestroy(): Promise<void> {
+        await super.ngOnDestroy();
     }
 
 }

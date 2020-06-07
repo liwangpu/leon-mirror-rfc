@@ -1,0 +1,24 @@
+:host {
+    display: block;
+    padding: 1.5em;
+
+    label {
+        padding-right: 1em;
+
+        &::after {
+            content: ':';
+        }
+    }
+
+    input {
+        width: 70%;
+    }
+
+    button {
+        margin-left: 1em;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}

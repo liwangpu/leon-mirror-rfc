@@ -3,6 +3,7 @@ import { updatePageMetaData } from '../actions/meta-data.action';
 import { IMirrorState } from '../states/i-mirror-state';
 import { IPageMetaData } from '../../models/i-page-meta-data';
 import { openPreviewMode, closePreviewMode } from '../actions/design.action';
+import { valueChange } from '../actions/notify.action';
 
 const _mirrorReducer = createReducer({},
     on(updatePageMetaData, (state: IMirrorState, action: IPageMetaData) => {
@@ -13,6 +14,10 @@ const _mirrorReducer = createReducer({},
     }),
     on(closePreviewMode, (state: IMirrorState) => {
         return { ...state, previewMode: false };
+    }),
+    on(valueChange, (state: IMirrorState, action: { name: string; value: any }) => {
+        let change = { [action.name]: action.value };
+        return { ...state, valueScope: { ...state.valueScope, ...change } };
     })
 );
 

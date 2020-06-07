@@ -9,9 +9,14 @@ export * from './models/dynamic-component';
 export * from './models/i-component-meta-data';
 export * from './models/i-notification';
 export * from './models/i-page-meta-data';
+export * from './models/i-filter';
+export * from './models/i-initialization';
 // state store
 export * from './state-store/states/i-mirror-state'
 export * from './state-store/reducers/mirror.reducer';
 export * from './state-store/actions/meta-data.action';
 export * from './state-store/actions/design.action';
 export * from './state-store/selectors/mirror.selector';
+// utils
+export * from './utils/expression-translator';
+export * from './utils/object-tool';

@@ -1,46 +1,49 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "target": "es2015",
-    "lib": [
-      "es2018",
-      "dom"
-    ],
-    "paths": {
-      "@env/*": [
-        "src/environments/*"
-      ],
-      "@cxist/mirror-core": [
-        "projects/mirror-core/src/public-api.ts"
-      ],
-      "@cxist/mirror-shared": [
-        "projects/mirror-shared/src/public-api.ts"
-      ],
-      "@cxist/mirror": [
-        "projects/mirror/src/public-api.ts"
-      ],
-      "@cxist/mirror-layout": [
-        "projects/mirror-layout/src/public-api.ts"
-      ],
-      "@cxist/mirror-grid": [
-        "projects/mirror-grid/src/public-api.ts"
-      ],
-      "@cxist/mirror-panel": [
-        "projects/mirror-panel/src/public-api.ts"
-      ],
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": "./",
+        "outDir": "./dist/out-tsc",
+        "sourceMap": true,
+        "declaration": false,
+        "downlevelIteration": true,
+        "experimentalDecorators": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "importHelpers": true,
+        "target": "es2015",
+        "lib": [
+            "es2018",
+            "dom"
+        ],
+        "paths": {
+            "@env/*": [
+                "src/environments/*"
+            ],
+            "@cxist/mirror-core": [
+                "projects/mirror-core/src/public-api.ts"
+            ],
+            "@cxist/mirror-shared": [
+                "projects/mirror-shared/src/public-api.ts"
+            ],
+            "@cxist/mirror": [
+                "projects/mirror/src/public-api.ts"
+            ],
+            "@cxist/mirror-layout": [
+                "projects/mirror-layout/src/public-api.ts"
+            ],
+            "@cxist/mirror-grid": [
+                "projects/mirror-grid/src/public-api.ts"
+            ],
+            "@cxist/mirror-panel": [
+                "projects/mirror-panel/src/public-api.ts"
+            ],
+            "@cxist/mirror-form": [
+                "projects/mirror-form/src/public-api.ts"
+            ],
+        }
+    },
+    "angularCompilerOptions": {
+        "fullTemplateTypeCheck": true,
+        "strictInjectionParameters": true
     }
-  },
-  "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
-  }
 }

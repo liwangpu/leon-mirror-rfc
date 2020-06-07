@@ -432,6 +432,54 @@
                     }
                 }
             }
+        },
+        "mirror-form": {
+            "projectType": "library",
+            "root": "projects/mirror-form",
+            "sourceRoot": "projects/mirror-form/src",
+            "prefix": "mirror",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "inlineTemplate": false,
+                    "inlineStyle": false,
+                    "style": "scss",
+                    "skipTests": false
+                }
+            },
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-ng-packagr:build",
+                    "options": {
+                        "tsConfig": "projects/mirror-form/tsconfig.lib.json",
+                        "project": "projects/mirror-form/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/mirror-form/tsconfig.lib.prod.json"
+                        }
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "projects/mirror-form/src/test.ts",
+                        "tsConfig": "projects/mirror-form/tsconfig.spec.json",
+                        "karmaConfig": "projects/mirror-form/karma.conf.js"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "projects/mirror-form/tsconfig.lib.json",
+                            "projects/mirror-form/tsconfig.spec.json"
+                        ],
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
+                }
+            }
         }
     },
     "defaultProject": "leon-mirror-rfc",

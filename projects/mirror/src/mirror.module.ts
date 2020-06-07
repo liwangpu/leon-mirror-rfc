@@ -10,6 +10,7 @@ import { COMPONENTDISCOVERY, PAGEMETADATASTORE, COMPONENTDESIGNDATASTORE, mirror
 import { StoreModule } from '@ngrx/store';
 import { GridModule as MirrorGridModule } from '@cxist/mirror-grid';
 import { PanelModule as MirrorPanelModule } from '@cxist/mirror-panel';
+import { FormModule as MirrorFormModule } from '@cxist/mirror-form';
 
 @NgModule({
     declarations: [],
@@ -17,8 +18,9 @@ import { PanelModule as MirrorPanelModule } from '@cxist/mirror-panel';
         CommonModule,
         MirrorRoutingModule,
         MirrorLayoutModule,
-        MirrorGridModule,
         MirrorPanelModule,
+        MirrorGridModule,
+        MirrorFormModule,
         StoreModule.forFeature(mirrorFeatureKey, mirrorReducer),
     ],
     providers: [

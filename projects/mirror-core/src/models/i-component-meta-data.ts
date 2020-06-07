@@ -1,3 +1,5 @@
+import { INotification } from './i-notification';
+
 export interface IComponentMetaData {
     key?: string;
     title?: string;
@@ -5,4 +7,5 @@ export interface IComponentMetaData {
     dataSourceKey?: string;
     containerId?: string;
     content?: Array<IComponentMetaData>;
+    notify?: Array<INotification>;
 }

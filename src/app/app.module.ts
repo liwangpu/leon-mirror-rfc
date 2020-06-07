@@ -1,22 +1,27 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StoreModule, ActionReducer, MetaReducer } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreRouterConnectingModule, routerReducer, RouterState } from '@ngrx/router-store';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { TokenSettingComponent } from './components/token-setting/token-setting.component';
+import { FormsModule } from '@angular/forms';
+import { AuthInterceptor } from './services/auth.interceptor';
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        TokenSettingComponent
     ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
+        FormsModule,
         AppRoutingModule,
         StoreModule.forRoot({}),
         EffectsModule.forRoot(),
@@ -24,7 +29,10 @@ import { AppComponent } from './app.component';
         // }),
         StoreDevtoolsModule.instrument()
     ],
-    providers: [],
+    providers: [
+        AuthInterceptor,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
