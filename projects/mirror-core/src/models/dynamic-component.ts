@@ -59,7 +59,7 @@ export abstract class DynamicComponent {
     //     return this._store;
     // }
 
-    private async renderChildrenComponent(): Promise<void> {
+    protected async renderChildrenComponent(): Promise<void> {
         if (!this.metaData.content?.length) { return; }
         if (!this.ChildComponentContainer.size) {
             console.warn(`该组件是有定义子组件的,而组件却没有声明ViewContainerRef,请检查`);
@@ -129,9 +129,4 @@ export abstract class DynamicComponent {
         // console.log(1, data);
     }
 
-    public async ngAfterViewInit(): Promise<void> {
-        // 渲染子组件
-        await this.renderChildrenComponent();
-        console.log('start render children');
-    }
 }

@@ -24,7 +24,7 @@ export class BlankLayoutComponent extends DynamicComponent implements AfterViewI
     }
 
     public async ngAfterViewInit(): Promise<void> {
-        await super.ngAfterViewInit();
+        await super.renderChildrenComponent();
     }
 
     public async ngOnDestroy(): Promise<void> {
