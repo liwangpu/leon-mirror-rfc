@@ -7,3 +7,8 @@ export const selectPageMetaData = createSelector(
     selectStoreState,
     state => state.pageMetaData
 );
+
+export const selectPreviewMode = createSelector(
+    selectStoreState,
+    state => state.preview
+);

@@ -1,5 +1,5 @@
 import { Component, OnInit, forwardRef, Injector, ViewChild, ViewContainerRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { DynamicComponent, DynamicComponentContainer } from '@cxist/mirror-core';
+import { DynamicComponent, ChildComponentContainer } from '@cxist/mirror-core';
 
 @Component({
     selector: 'mirror-tab',
@@ -15,7 +15,7 @@ import { DynamicComponent, DynamicComponentContainer } from '@cxist/mirror-core'
 export class TabComponent extends DynamicComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('container', { static: false, read: ViewContainerRef })
-    @DynamicComponentContainer()
+    @ChildComponentContainer()
     private container: ViewContainerRef;
     public constructor(
         injector: Injector
@@ -24,10 +24,10 @@ export class TabComponent extends DynamicComponent implements AfterViewInit, OnD
     }
 
     public async ngAfterViewInit(): Promise<void> {
-       
+        await super.ngAfterViewInit();
     }
 
     public async ngOnDestroy(): Promise<void> {
-      
+
     }
 }

@@ -15,6 +15,10 @@ export class StateStoreService {
         return this.store.select(fromStore.selectPageMetaData);
     }
 
+    public get previewMode$(): Observable<boolean> {
+        return this.store.select(fromStore.selectPreviewMode);
+    }
+
     public setPageMetaData(pageMetaData: fromModel.IPageMetaData): void {
         this.store.dispatch(fromStore.setPageMetaData({ pageMetaData }));
     }

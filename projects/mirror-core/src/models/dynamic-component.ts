@@ -13,12 +13,12 @@ import { ExpressionTranslator } from '../utils/expression-translator';
 import { ArrayTool } from '../utils/array-tool';
 
 
-export function DynamicComponentContainer(containerId?: string) {
+export function ChildComponentContainer(containerId?: string) {
     containerId = containerId || '';
     return function (target: Object, propertyName: string) {
         let _val = null;
         function setter(val: any) {
-            <DynamicComponent>this.dynamicComponentContainer.set(containerId, val);
+            <DynamicComponent>this.ChildComponentContainer.set(containerId, val);
             _val = val;
         }
 
@@ -40,7 +40,7 @@ export abstract class DynamicComponent {
     private destroy$ = new Subject<boolean>();
     private _metaData: IComponentMetaData;
     // private _store: Store<IMirrorState>;
-    private dynamicComponentContainer = new Map<string, ViewContainerRef>();
+    private ChildComponentContainer = new Map<string, ViewContainerRef>();
     public constructor(
         protected injector: Injector
     ) { }
@@ -61,7 +61,7 @@ export abstract class DynamicComponent {
 
     private async renderChildrenComponent(): Promise<void> {
         if (!this.metaData.content?.length) { return; }
-        if (!this.dynamicComponentContainer.size) {
+        if (!this.ChildComponentContainer.size) {
             console.warn(`该组件是有定义子组件的,而组件却没有声明ViewContainerRef,请检查`);
             return;
         }
@@ -86,7 +86,7 @@ export abstract class DynamicComponent {
                 }
             ], this.injector);
             let containerId: string = cmd.containerId || '';
-            let vc = this.dynamicComponentContainer.get(containerId);
+            let vc = this.ChildComponentContainer.get(containerId);
             // debugger;
             if (!vc) {
                 console.error(`没有找到containerId为 "${containerId}" 的ViewContainerRef,请检查containerId是否写错或者动态组件宿主是否已经提供该Ref`);
@@ -129,17 +129,9 @@ export abstract class DynamicComponent {
         // console.log(1, data);
     }
 
-    // public async ngAfterViewInit(): Promise<void> {
-    //     // initialize接口实现判断
-    //     await this.checkAndImplementInitialization();
-    //     // 渲染子组件
-    //     await this.renderChildrenComponent();
-    //     // console.log('start render children');
-    // }
-
-    // public async ngOnDestroy(): Promise<void> {
-    //     this.destroy$.next(true);
-    //     this.destroy$.complete();
-    //     this.destroy$.unsubscribe();
-    // }
+    public async ngAfterViewInit(): Promise<void> {
+        // 渲染子组件
+        await this.renderChildrenComponent();
+        console.log('start render children');
+    }
 }
