@@ -4,12 +4,14 @@ import { FormComponent } from './components/form/form.component';
 import { ComponentRegistryService } from './services/component-registry.service';
 import { COMPONENTREGISTRY } from '@cxist/mirror-core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '@cxist/mirror-shared';
 
 @NgModule({
     declarations: [FormComponent],
     imports: [
         CommonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SharedModule
     ],
     providers:[
         ComponentRegistryService,

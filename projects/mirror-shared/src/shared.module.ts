@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ComponentDesignerDirective } from './directives/component-designer.directive';
+import * as fromComponent from './components';
 
 @NgModule({
-    declarations: [ComponentDesignerDirective],
+    declarations: [fromComponent.components],
     imports: [
         CommonModule
     ],
     exports: [
-        ComponentDesignerDirective
+        fromComponent.DynamicComponentComponent
     ]
 })
 export class SharedModule { }

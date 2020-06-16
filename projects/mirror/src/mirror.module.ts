@@ -2,12 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MirrorRoutingModule } from './mirror-routing.module';
 import { LayoutModule as MirrorLayoutModule } from '@cxist/mirror-layout';
-import { ComponentDiscoveryService } from './services/component-discovery.service';
-import { PageMetaDataResolverService } from './services/page-meta-data-resolver.service';
-import { PageMetaDataStoreService } from './services/page-meta-data-store.service';
-import { ComponentDesignDataStoreService } from './services/component-design-data-store.service';
-import { COMPONENTDISCOVERY, PAGEMETADATASTORE, COMPONENTDESIGNDATASTORE, mirrorFeatureKey, mirrorReducer } from '@cxist/mirror-core';
-import { StoreModule } from '@ngrx/store';
+import * as fromService from './services';
+import * as fromCore from '@cxist/mirror-core';
 import { GridModule as MirrorGridModule } from '@cxist/mirror-grid';
 import { PanelModule as MirrorPanelModule } from '@cxist/mirror-panel';
 import { FormModule as MirrorFormModule } from '@cxist/mirror-form';
@@ -21,24 +17,25 @@ import { FormModule as MirrorFormModule } from '@cxist/mirror-form';
         MirrorPanelModule,
         MirrorGridModule,
         MirrorFormModule,
-        StoreModule.forFeature(mirrorFeatureKey, mirrorReducer),
+        fromCore.StateStoreModule
     ],
     providers: [
-        PageMetaDataResolverService,
-        ComponentDiscoveryService,
-        PageMetaDataStoreService,
-        ComponentDesignDataStoreService,
+        fromCore.StateStoreService,
+        fromService.PageMetaDataResolverService,
+        fromService.ComponentDiscoveryService,
+        fromService.PageMetaDataStoreService,
+        fromService.ComponentDesignDataStoreService,
         {
-            provide: COMPONENTDISCOVERY,
-            useExisting: ComponentDiscoveryService,
+            provide: fromCore.COMPONENTDISCOVERY,
+            useExisting: fromService.ComponentDiscoveryService,
         },
         {
-            provide: PAGEMETADATASTORE,
-            useExisting: PageMetaDataStoreService
+            provide: fromCore.PAGEMETADATASTORE,
+            useExisting: fromService.PageMetaDataStoreService
         },
         {
-            provide: COMPONENTDESIGNDATASTORE,
-            useExisting: ComponentDesignDataStoreService
+            provide: fromCore.COMPONENTDESIGNDATASTORE,
+            useExisting: fromService.ComponentDesignDataStoreService
         },
     ]
 })

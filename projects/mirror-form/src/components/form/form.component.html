@@ -1,18 +1,20 @@
-<div class="form" mirrorComponentDesigner>
-    <span>form</span>
-    <form [formGroup]='form'>
-        <div>
-            <label>姓名</label>
-            <input type="text" formControlName='name'>
-        </div>
-        <div>
-            <label>年纪</label>
-            <input type="text" formControlName='age'>
-        </div>
-        <div>
-            <label>备注</label>
-            <input type="text" formControlName='remark'>
-        </div>
-        <!-- <button (click)='save()'>更新</button> -->
-    </form>
-</div>
+<mirror-dynamic-component>
+    <div class="form">
+        <span>form</span>
+        <form [formGroup]='form'>
+            <div>
+                <label>姓名</label>
+                <input type="text" formControlName='name'>
+            </div>
+            <div>
+                <label>年纪</label>
+                <input type="text" formControlName='age'>
+            </div>
+            <div>
+                <label>备注</label>
+                <input type="text" formControlName='remark'>
+            </div>
+            <!-- <button (click)='save()'>更新</button> -->
+        </form>
+    </div>
+</mirror-dynamic-component>

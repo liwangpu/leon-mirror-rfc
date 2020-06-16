@@ -1,11 +1,17 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Injector } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Injector, forwardRef } from '@angular/core';
 import { DynamicComponent } from '@cxist/mirror-core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
     selector: 'mirror-grid',
     templateUrl: './grid.component.html',
-    styleUrls: ['./grid.component.scss']
+    styleUrls: ['./grid.component.scss'],
+    providers: [
+        {
+            provide: DynamicComponent,
+            useExisting: forwardRef(() => GridComponent)
+        }
+    ]
 })
 export class GridComponent extends DynamicComponent implements AfterViewInit, OnDestroy {
 
@@ -22,11 +28,11 @@ export class GridComponent extends DynamicComponent implements AfterViewInit, On
     }
 
     public async ngAfterViewInit(): Promise<void> {
-        await super.ngAfterViewInit();
+
     }
 
     public async ngOnDestroy(): Promise<void> {
-        await super.ngOnDestroy();
+
     }
 
     public updateName(): void {

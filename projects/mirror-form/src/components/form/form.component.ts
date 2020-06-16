@@ -30,11 +30,11 @@ export class FormComponent extends DynamicComponent implements AfterViewInit, On
     public parameters: { [key: string]: any; } = { name: '{{name}}', age: '{{age}}', remark: '天天开心' };
 
     public async ngAfterViewInit(): Promise<void> {
-        await super.ngAfterViewInit();
+     
     }
 
     public async ngOnDestroy(): Promise<void> {
-        await super.ngOnDestroy();
+     
     }
 
     public async initialize(data: { [key: string]: any; }): Promise<void> {

@@ -1,9 +1,9 @@
 import { Component, OnInit, Injector, ViewChild, ViewContainerRef, OnDestroy, Inject, ComponentRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, takeUntil, switchMap } from 'rxjs/operators';
-import { IPageMetaData, COMPONENTDESIGNDATASTORE, IComponentDesignDataStore, COMPONENTDISCOVERY, IComponentDiscovery, COMPONENTMETADATA, IMirrorState, updatePageMetaData, selectPageMetaData, openPreviewMode, closePreviewMode } from '@cxist/mirror-core';
-import { Store } from '@ngrx/store';
+import { map, takeUntil, switchMap, filter } from 'rxjs/operators';
+import * as fromCore from '@cxist/mirror-core';
 import { Subject } from 'rxjs';
+import { SubSink } from 'subsink';
 
 @Component({
     selector: 'mirror-dynamic-page',
@@ -14,40 +14,49 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
 
     @ViewChild('layoutContainer', { static: true, read: ViewContainerRef })
     private layoutContainer: ViewContainerRef;
-    private destroy$ = new Subject<boolean>();
+    private subs = new SubSink();
     public constructor(
         acr: ActivatedRoute,
-        @Inject(COMPONENTDESIGNDATASTORE) private componentDesignDataStore: IComponentDesignDataStore,
-        @Inject(COMPONENTDISCOVERY) private componentDiscoverySrv: IComponentDiscovery,
+        @Inject(fromCore.COMPONENTDESIGNDATASTORE) private componentDesignDataStore: fromCore.IComponentDesignDataStore,
+        @Inject(fromCore.COMPONENTDISCOVERY) private componentDiscoverySrv: fromCore.IComponentDiscovery,
         private injector: Injector,
-        private store: Store<IMirrorState>
+        private store: fromCore.StateStoreService
     ) {
-        acr.data
+        this.subs.sink = acr.data
             .pipe(map(x => x['pageMetaData']))
-            .subscribe((metaData: IPageMetaData) => {
+            .subscribe((metaData: fromCore.IPageMetaData) => {
                 this.layoutContainer?.clear();
-                this.store.dispatch(updatePageMetaData(metaData));
-                // console.log('page meta data change', metaData);
+                this.store.resetScopeData('dynamic page');
+                this.store.setPageMetaData(metaData);
             });
-        acr.queryParams
-            .pipe(map(q => q.preview))
-            .subscribe((preview: boolean) => this.store.dispatch(preview ? openPreviewMode() : closePreviewMode()));
+        this.subs.sink = acr.params
+            .subscribe(data => {
+                this.store.setScopeData({ id: data.dataId }, 'params');
+            });
+
+        this.subs.sink = acr.queryParams
+            // .pipe(map(q => q.preview))
+            .subscribe(q => {
+
+                let queryParamKeys = Object.keys(q).filter(x => ['preview'].indexOf(x) === -1);
+                let scope: {} = {};
+                queryParamKeys.forEach(k => scope[k] = q[k]);
+                this.store.setScopeData(scope, 'queryParams');
+                this.store.resetPreviewMode(Boolean(q.preview));
+            });
     }
 
     public ngOnDestroy(): void {
-        this.destroy$.next(true);
-        this.destroy$.complete();
-        this.destroy$.unsubscribe();
+        this.subs.unsubscribe();
     }
 
     public ngOnInit(): void {
-        this.store.select(selectPageMetaData)
-            .pipe(takeUntil(this.destroy$))
+        this.subs.sink = this.store.pageMetaData$
             .pipe(switchMap(pageMetaData => this.componentDesignDataStore.getMetaData(pageMetaData.layout.control).pipe(map(m => ({ ...m, ...pageMetaData.layout })))))
             .subscribe(componentMetaData => {
                 const ij = Injector.create([
                     {
-                        provide: COMPONENTMETADATA,
+                        provide: fromCore.COMPONENTMETADATA,
                         useValue: componentMetaData
                     }
                 ], this.injector);
