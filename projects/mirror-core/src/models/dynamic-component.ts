@@ -1,24 +1,16 @@
 import { Injector, ViewContainerRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { IComponentMetaData } from './i-component-meta-data';
-import { COMPONENTMETADATA } from '../tokens/component-meta-data';
-import { IComponentDiscovery, COMPONENTDISCOVERY } from '../tokens/component-discovery';
-import { IComponentDesignDataStore, COMPONENTDESIGNDATASTORE } from '../tokens/component-design-data-store';
+import * as fromToken from '../tokens';
 import * as merge from 'deepmerge';
-import { Store } from '@ngrx/store';
-// import { IMirrorState } from '../state-store/states/i-mirror-state';
-import { Subject } from 'rxjs';
-import { ObjectTool } from '../utils/object-tool';
-import { takeUntil, debounceTime } from 'rxjs/operators';
-import { ExpressionTranslator } from '../utils/expression-translator';
-import { ArrayTool } from '../utils/array-tool';
-
+import * as fromService from '../services';
+import * as fromTool from '../utils';
 
 export function ChildComponentContainer(containerId?: string) {
     containerId = containerId || '';
     return function (target: Object, propertyName: string) {
         let _val = null;
         function setter(val: any) {
-            <DynamicComponent>this.ChildComponentContainer.set(containerId, val);
+            this._childComponentContainer.set(containerId, val);
             _val = val;
         }
 
@@ -37,37 +29,52 @@ export function ChildComponentContainer(containerId?: string) {
 
 export abstract class DynamicComponent {
 
-    private destroy$ = new Subject<boolean>();
     private _metaData: IComponentMetaData;
-    // private _store: Store<IMirrorState>;
-    private ChildComponentContainer = new Map<string, ViewContainerRef>();
+    private _stateStore: fromService.StateStoreService;
+    private _childComponentContainer = new Map<string, ViewContainerRef>();
+    private _initialParameters: { [key: string]: any };
+    private _filterParameters: { [key: string]: any };
     public constructor(
         protected injector: Injector
     ) { }
 
+    protected get stateStore(): fromService.StateStoreService {
+        if (!this._stateStore) {
+            this._stateStore = this.injector.get(fromService.StateStoreService);
+        }
+        return this._stateStore;
+    }
+
     protected get metaData(): IComponentMetaData {
         if (!this._metaData) {
-            this._metaData = this.injector.get(COMPONENTMETADATA, {});
+            this._metaData = this.injector.get(fromToken.COMPONENTMETADATA, {});
         }
         return this._metaData;
     }
 
-    // protected get store(): Store<IMirrorState> {
-    //     if (!this._store) {
-    //         this._store = this.injector.get(Store);
-    //     }
-    //     return this._store;
-    // }
+    private get initialParameters(): { [key: string]: any } {
+        if (!this._initialParameters) {
+            this._initialParameters = this.metaData.filter;
+        }
+        return this._initialParameters;
+    }
+
+    private get filterParameters(): { [key: string]: any } {
+        if (!this._filterParameters) {
+            this._filterParameters = this.metaData.filter;
+        }
+        return this._filterParameters;
+    }
 
     protected async renderChildrenComponent(): Promise<void> {
         if (!this.metaData.content?.length) { return; }
-        if (!this.ChildComponentContainer.size) {
+        if (!this._childComponentContainer.size) {
             console.warn(`该组件是有定义子组件的,而组件却没有声明ViewContainerRef,请检查`);
             return;
         }
 
-        const componentDiscoverySrv: IComponentDiscovery = this.injector.get(COMPONENTDISCOVERY);
-        const componentDesignDataStore: IComponentDesignDataStore = this.injector.get(COMPONENTDESIGNDATASTORE);
+        const componentDiscoverySrv: fromToken.IComponentDiscovery = this.injector.get(fromToken.COMPONENTDISCOVERY);
+        const componentDesignDataStore: fromToken.IComponentDesignDataStore = this.injector.get(fromToken.COMPONENTDESIGNDATASTORE);
         for (let cmd of this.metaData.content) {
             if (cmd.key) {
                 let m = await componentDesignDataStore.getMetaData(cmd.key).toPromise();
@@ -81,12 +88,12 @@ export abstract class DynamicComponent {
 
             const ij = Injector.create([
                 {
-                    provide: COMPONENTMETADATA,
+                    provide: fromToken.COMPONENTMETADATA,
                     useValue: cmd
                 }
             ], this.injector);
             let containerId: string = cmd.containerId || '';
-            let vc = this.ChildComponentContainer.get(containerId);
+            let vc = this._childComponentContainer.get(containerId);
             // debugger;
             if (!vc) {
                 console.error(`没有找到containerId为 "${containerId}" 的ViewContainerRef,请检查containerId是否写错或者动态组件宿主是否已经提供该Ref`);
@@ -96,37 +103,19 @@ export abstract class DynamicComponent {
         }
     }
 
-    // private async checkAndImplementInitialization(): Promise<void> {
-    //     if (!this['initialize'] || !this['parameters']) { return; }
-    //     let parameters = this['parameters']
-    //     let variables = ExpressionTranslator.analyzeExpressionVariable(parameters);
-    //     if (variables.length) {
-    //         this.store.select(selectValueScopeAndVariables)
-    //             .pipe(takeUntil(this.destroy$))
-    //             .pipe(debounceTime(100))
-    //             .subscribe((res: { scope: { [key: string]: any }, variables: Array<string> }) => {
-    //                 let all = ArrayTool.allContain(res.variables, variables);
-    //                 if (!all) { return; }
-    //                 let data = ExpressionTranslator.translateStaticVariableExpression(parameters, res.scope);
-    //                 this['initialize'](data)
-    //             });
-    //     } else {
-    //         this['initialize'](parameters);
-    //     }
-    // }
-
     protected publishValueChange(data: { [key: string]: any }): void {
+        if (!data) { return; }
         if (!this.metaData.notify?.length) { return; }
+        let properties: Array<string> = Object.keys(data);
+        if (!properties.length) { return; }
 
-        // let keys:Array<string>=
+        let scope: { [key: string]: any } = {};
         this.metaData.notify.forEach(it => {
+            if (!properties.some(x => x === it.source)) { return; }
             let name = it.target || it.source;
-            // console.log(typeof data[it.source]);
-            let value = ObjectTool.recursionValueByField(data, it.source);
-            if (typeof value === 'undefined') { return; }
-            // this.store.dispatch(valueChange({ name, value }));
+            scope[name] = fromTool.ObjectTool.recursionValueByField(data, it.source);
         });
-        // console.log(1, data);
+        this.stateStore.setScopeData(scope);
     }
 
 }

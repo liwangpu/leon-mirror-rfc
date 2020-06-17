@@ -28,6 +28,32 @@ export class DynamicComponentComponent implements OnInit, OnDestroy {
         // console.log(1, this.dyc);
     }
 
+        // protected get store(): Store<IMirrorState> {
+    //     if (!this._store) {
+    //         this._store = this.injector.get(Store);
+    //     }
+    //     return this._store;
+    // }
+
+    // private async checkAndImplementInitialization(): Promise<void> {
+    //     if (!this['initialize'] || !this['parameters']) { return; }
+    //     let parameters = this['parameters']
+    //     let variables = ExpressionTranslator.analyzeExpressionVariable(parameters);
+    //     if (variables.length) {
+    //         this.store.select(selectValueScopeAndVariables)
+    //             .pipe(takeUntil(this.destroy$))
+    //             .pipe(debounceTime(100))
+    //             .subscribe((res: { scope: { [key: string]: any }, variables: Array<string> }) => {
+    //                 let all = ArrayTool.allContain(res.variables, variables);
+    //                 if (!all) { return; }
+    //                 let data = ExpressionTranslator.translateStaticVariableExpression(parameters, res.scope);
+    //                 this['initialize'](data)
+    //             });
+    //     } else {
+    //         this['initialize'](parameters);
+    //     }
+    // }
+
     // @HostListener('mouseover', ['$event'])
     // private onMouseEnter(e: any): void {
     //     e.stopPropagation();

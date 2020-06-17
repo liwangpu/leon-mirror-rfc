@@ -8,4 +8,6 @@ export interface IComponentMetaData {
     containerId?: string;
     content?: Array<IComponentMetaData>;
     notify?: Array<INotification>;
+    filter?: { [key: string]: any };
+    
 }

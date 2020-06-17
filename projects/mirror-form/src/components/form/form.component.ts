@@ -1,5 +1,5 @@
 import { Component, OnInit, forwardRef, Injector, AfterViewInit, OnDestroy } from '@angular/core';
-import { DynamicComponent, IInitialization } from '@cxist/mirror-core';
+import { DynamicComponent, IInitializable } from '@cxist/mirror-core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
@@ -13,7 +13,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
         }
     ]
 })
-export class FormComponent extends DynamicComponent implements AfterViewInit, OnDestroy, IInitialization {
+export class FormComponent extends DynamicComponent implements OnDestroy, IInitializable {
 
     public form: FormGroup;
     public constructor(
@@ -27,19 +27,15 @@ export class FormComponent extends DynamicComponent implements AfterViewInit, On
             remark: []
         });
     }
-    public parameters: { [key: string]: any; } = { name: '{{name}}', age: '{{age}}', remark: '天天开心' };
-
-    public async ngAfterViewInit(): Promise<void> {
-     
-    }
 
     public async ngOnDestroy(): Promise<void> {
-     
+
     }
 
-    public async initialize(data: { [key: string]: any; }): Promise<void> {
+    public async InitialParameterChange(data: { [key: string]: any; }): Promise<void> {
         console.log('form get initialize data', data);
         this.form.patchValue(data);
     }
+
 }
 
