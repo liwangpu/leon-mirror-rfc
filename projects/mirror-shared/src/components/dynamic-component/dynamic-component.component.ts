@@ -1,7 +1,15 @@
 import { Component, OnInit, OnDestroy, HostBinding, HostListener, ChangeDetectionStrategy } from '@angular/core';
 import * as fromCore from '@cxist/mirror-core';
 import { SubSink } from 'subsink';
-import { DynamicComponent } from '@cxist/mirror-core';
+import { filter } from 'rxjs/operators';
+
+function satisfyVariables(variables: Array<string>): any {
+    return filter(scope => {
+        if (!scope) { return false; }
+
+        return fromCore.ArrayTool.allContain(Object.keys(scope), variables);
+    });
+}
 
 @Component({
     selector: 'mirror-dynamic-component',
@@ -12,11 +20,11 @@ import { DynamicComponent } from '@cxist/mirror-core';
 export class DynamicComponentComponent implements OnInit, OnDestroy {
 
     @HostBinding('class.preview')
-    private preview: boolean;
+    public preview: boolean;
     private subs = new SubSink();
     public constructor(
         private store: fromCore.StateStoreService,
-        private dyc: DynamicComponent,
+        private dyc: fromCore.DynamicComponent,
     ) { }
 
     public ngOnDestroy(): void {
@@ -25,48 +33,40 @@ export class DynamicComponentComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.subs.sink = this.store.previewMode$.subscribe(enable => this.preview = enable);
+        // this.implementInitialization();
+
+        if (this.checkPesentationIsInitializable) {
+            this.presentationImplementInitialization();
+        }
         // console.log(1, this.dyc);
     }
 
-        // protected get store(): Store<IMirrorState> {
-    //     if (!this._store) {
-    //         this._store = this.injector.get(Store);
-    //     }
-    //     return this._store;
-    // }
+    /**
+     * 校验Pesentation是否实现Initializable
+     */
+    private get checkPesentationIsInitializable(): boolean {
+        let presentation: fromCore.IInitializable = this.dyc as any;
+        return presentation.initialParameters && Object.keys(presentation.initialParameters).length && typeof presentation.InitialParameterChange === 'function';
+    }
 
-    // private async checkAndImplementInitialization(): Promise<void> {
-    //     if (!this['initialize'] || !this['parameters']) { return; }
-    //     let parameters = this['parameters']
-    //     let variables = ExpressionTranslator.analyzeExpressionVariable(parameters);
-    //     if (variables.length) {
-    //         this.store.select(selectValueScopeAndVariables)
-    //             .pipe(takeUntil(this.destroy$))
-    //             .pipe(debounceTime(100))
-    //             .subscribe((res: { scope: { [key: string]: any }, variables: Array<string> }) => {
-    //                 let all = ArrayTool.allContain(res.variables, variables);
-    //                 if (!all) { return; }
-    //                 let data = ExpressionTranslator.translateStaticVariableExpression(parameters, res.scope);
-    //                 this['initialize'](data)
-    //             });
-    //     } else {
-    //         this['initialize'](parameters);
-    //     }
-    // }
-
-    // @HostListener('mouseover', ['$event'])
-    // private onMouseEnter(e: any): void {
-    //     e.stopPropagation();
-    //     console.log('mouse enter');
-    //     this.preview = true;
-    // }
-
-    // @HostListener('mouseout', ['$event'])
-    // private onMouseLeave(e: any): void {
-    //     e.stopPropagation();
-    //     console.log('mouse leave');
-    //     this.preview = false;
-    // }
-
+    /**
+     * 为Pesentation实施Initializable
+     */
+    private presentationImplementInitialization(): void {
+        let presentation: fromCore.IInitializable = this.dyc as any;
+        let variables = fromCore.ExpressionTranslator.analyzeExpressionVariable(presentation.initialParameters);
+        if (!variables.length) {
+            presentation.InitialParameterChange(presentation.initialParameters);
+            return;
+        }
+        // console.log('initial variables', variables);
+        this.subs.sink = this.store.scopeData$
+            .pipe(satisfyVariables(variables))
+            .subscribe(async scope => {
+                let data = fromCore.ExpressionTranslator.translateStaticVariableExpression(presentation.initialParameters, scope);
+                // console.log('scope', scope, data);
+                await presentation.InitialParameterChange(data);
+            });
+    }
 
 }

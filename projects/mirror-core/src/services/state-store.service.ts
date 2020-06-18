@@ -15,6 +15,10 @@ export class StateStoreService {
         return this.store.select(fromStore.selectPageMetaData);
     }
 
+    public get scopeData$(): Observable<{ [key: string]: any }> {
+        return this.store.select(fromStore.selectScopeData);
+    }
+
     public get previewMode$(): Observable<boolean> {
         return this.store.select(fromStore.selectPreviewMode);
     }

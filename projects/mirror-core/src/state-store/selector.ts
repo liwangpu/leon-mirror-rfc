@@ -12,3 +12,8 @@ export const selectPreviewMode = createSelector(
     selectStoreState,
     state => state.preview
 );
+
+export const selectScopeData = createSelector(
+    selectStoreState,
+    state => state.scope
+);

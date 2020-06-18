@@ -67,7 +67,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "port": 8765,
+                        "port": 7654,
                         "browserTarget": "leon-mirror-rfc:build"
                     },
                     "configurations": {

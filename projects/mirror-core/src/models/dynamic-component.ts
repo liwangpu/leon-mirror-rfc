@@ -38,6 +38,27 @@ export abstract class DynamicComponent {
         protected injector: Injector
     ) { }
 
+    public get metaData(): IComponentMetaData {
+        if (!this._metaData) {
+            this._metaData = this.injector.get(fromToken.COMPONENTMETADATA, {});
+        }
+        return this._metaData;
+    }
+
+    public get initialParameters(): { [key: string]: any } {
+        if (!this._initialParameters) {
+            this._initialParameters = this.metaData.initialParameters;
+        }
+        return this._initialParameters;
+    }
+
+    public get filterParameters(): { [key: string]: any } {
+        if (!this._filterParameters) {
+            this._filterParameters = this.metaData.filter;
+        }
+        return this._filterParameters;
+    }
+
     protected get stateStore(): fromService.StateStoreService {
         if (!this._stateStore) {
             this._stateStore = this.injector.get(fromService.StateStoreService);
@@ -45,26 +66,7 @@ export abstract class DynamicComponent {
         return this._stateStore;
     }
 
-    protected get metaData(): IComponentMetaData {
-        if (!this._metaData) {
-            this._metaData = this.injector.get(fromToken.COMPONENTMETADATA, {});
-        }
-        return this._metaData;
-    }
 
-    private get initialParameters(): { [key: string]: any } {
-        if (!this._initialParameters) {
-            this._initialParameters = this.metaData.filter;
-        }
-        return this._initialParameters;
-    }
-
-    private get filterParameters(): { [key: string]: any } {
-        if (!this._filterParameters) {
-            this._filterParameters = this.metaData.filter;
-        }
-        return this._filterParameters;
-    }
 
     protected async renderChildrenComponent(): Promise<void> {
         if (!this.metaData.content?.length) { return; }

@@ -10,12 +10,24 @@ import { parse } from 'query-string';
 })
 export class AppComponent {
 
+
+    private _showSimulator: boolean;
     public constructor(
         private router: Router
     ) {
         // this.router.events.pipe(filter(evt => evt instanceof NavigationEnd)).subscribe(res => {
         //     console.info('url info:', res);
         // });
+        this._showSimulator = localStorage.getItem('showSimulator') === 'true' ? true : false;
+    }
+
+    public set showSimulator(val: boolean) {
+        this._showSimulator = val;
+        localStorage.setItem('showSimulator', `${val}`);
+    }
+
+    public get showSimulator(): boolean {
+        return this._showSimulator;
     }
 
     public gotoPreview(): void {

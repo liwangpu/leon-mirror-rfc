@@ -9,19 +9,22 @@ import { StoreRouterConnectingModule, routerReducer, RouterState } from '@ngrx/r
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TokenSettingComponent } from './components/token-setting/token-setting.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './services/auth.interceptor';
+import { SimulatorComponent } from './components/simulator/simulator.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        TokenSettingComponent
+        TokenSettingComponent,
+        SimulatorComponent
     ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
         FormsModule,
+        ReactiveFormsModule,
         AppRoutingModule,
         StoreModule.forRoot({}),
         EffectsModule.forRoot(),

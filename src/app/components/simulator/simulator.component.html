@@ -1,0 +1,31 @@
+<div class="header">
+    <span class="title">组件交互模拟器</span>
+    <span class="close" (click)='close.emit()'>×</span>
+</div>
+<div class="content">
+    <p>作用域</p>
+    <form [formGroup]='scopeForm'>
+        <div>
+            <label>变量</label>
+            <input type="text" formControlName='name'>
+        </div>
+        <div>
+            <label>值</label>
+            <input type="text" formControlName='value'>
+        </div>
+        <button (click)='sendScope()'>发送</button>
+    </form>
+
+    <p>事件</p>
+    <form [formGroup]='eventForm'>
+        <div>
+            <label>事件</label>
+            <input type="text" formControlName='name'>
+        </div>
+        <div>
+            <label>值</label>
+            <input type="text" formControlName='value'>
+        </div>
+        <button (click)='sendEvent()'>发送</button>
+    </form>
+</div>

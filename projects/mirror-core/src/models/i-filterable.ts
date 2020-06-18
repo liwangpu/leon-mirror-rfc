@@ -1,3 +1,4 @@
 export interface IFilter {
-    filterChange(data: { [key: string]: any }): Promise<void>;
+    filterParameters: { [key: string]: any };
+    filterParameterChange(data: { [key: string]: any }): Promise<void>;
 }

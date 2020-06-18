@@ -9,5 +9,5 @@ export interface IComponentMetaData {
     content?: Array<IComponentMetaData>;
     notify?: Array<INotification>;
     filter?: { [key: string]: any };
-    
+    initialParameters?: { [key: string]: any };
 }
