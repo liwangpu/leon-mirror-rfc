@@ -1,7 +1,7 @@
 {
     "title": "student_edit_form",
     "control": "form",
-    "initialParameters": {
+    "initialParameter": {
         "name": "{{name}}",
         "age": 12,
         "remark": "系统自动生成"

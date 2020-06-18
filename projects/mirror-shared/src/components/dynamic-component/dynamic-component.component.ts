@@ -44,12 +44,12 @@ export class DynamicComponentComponent implements OnInit, OnDestroy {
 
     private get checkPesentationIsInitializable(): boolean {
         let presentation: fromCore.IInitialize = this.dyc as any;
-        return presentation.initialParameters && Object.keys(presentation.initialParameters).length && typeof presentation.InitialParameterChange === 'function';
+        return presentation.initialParameter && Object.keys(presentation.initialParameter).length && typeof presentation.InitialParameterChange === 'function';
     }
 
     private get checkPresentationIsFilterable(): boolean {
         let presentation: fromCore.IFilter = this.dyc as any;
-        return presentation.filterParameters && Object.keys(presentation.filterParameters).length && typeof presentation.filterParameterChange === 'function';
+        return presentation.filterParameter && Object.keys(presentation.filterParameter).length && typeof presentation.filterParameterChange === 'function';
     }
 
     private get checkPresentationIsSubscribe(): boolean {
@@ -80,15 +80,15 @@ export class DynamicComponentComponent implements OnInit, OnDestroy {
 
     private presentationImplementInitialization(): void {
         let presentation: fromCore.IInitialize = this.dyc as any;
-        let variables = fromCore.ExpressionTranslator.analyzeExpressionVariable(presentation.initialParameters);
+        let variables = fromCore.ExpressionTranslator.analyzeExpressionVariable(presentation.initialParameter);
         if (!variables.length) {
-            presentation.InitialParameterChange(presentation.initialParameters);
+            presentation.InitialParameterChange(presentation.initialParameter);
             return;
         }
         this.subs.sink = this.store.scopeData$
             .pipe(satisfyVariables(variables))
             .subscribe(async scope => {
-                let data = fromCore.ExpressionTranslator.translateStaticVariableExpression(presentation.initialParameters, scope);
+                let data = fromCore.ExpressionTranslator.translateStaticVariableExpression(presentation.initialParameter, scope);
                 // console.log('scope', scope, data);
                 await presentation.InitialParameterChange(data);
             });
@@ -96,16 +96,16 @@ export class DynamicComponentComponent implements OnInit, OnDestroy {
 
     private presentationImplementFilterable(): void {
         let presentation: fromCore.IFilter = this.dyc as any;
-        let variables = fromCore.ExpressionTranslator.analyzeExpressionVariable(presentation.filterParameters);
+        let variables = fromCore.ExpressionTranslator.analyzeExpressionVariable(presentation.filterParameter);
         if (!variables.length) {
-            presentation.filterParameterChange(presentation.filterParameters);
+            presentation.filterParameterChange(presentation.filterParameter);
             return;
         }
 
         this.subs.sink = this.store.scopeData$
             .pipe(satisfyVariables(variables))
             .subscribe(async scope => {
-                let data = fromCore.ExpressionTranslator.translateStaticVariableExpression(presentation.filterParameters, scope);
+                let data = fromCore.ExpressionTranslator.translateStaticVariableExpression(presentation.filterParameter, scope);
                 // console.log('scope', scope, data);
                 await presentation.filterParameterChange(data);
             });

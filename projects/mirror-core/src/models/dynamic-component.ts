@@ -32,8 +32,8 @@ export abstract class DynamicComponent {
     private _metaData: IComponentMetaData;
     private _stateStore: fromService.StateStoreService;
     private _childComponentContainer = new Map<string, ViewContainerRef>();
-    private _initialParameters: { [key: string]: any };
-    private _filterParameters: { [key: string]: any };
+    private _initialParameter: { [key: string]: any };
+    private _filterParameter: { [key: string]: any };
     public constructor(
         protected injector: Injector
     ) { }
@@ -46,6 +46,10 @@ export abstract class DynamicComponent {
         return this.metaData.title;
     }
 
+    public get control(): string {
+        return this.metaData.control;
+    }
+
     public get metaData(): IComponentMetaData {
         if (!this._metaData) {
             this._metaData = this.injector.get(fromToken.COMPONENTMETADATA, {});
@@ -53,22 +57,26 @@ export abstract class DynamicComponent {
         return this._metaData;
     }
 
+    public get content(): Array<IComponentMetaData> {
+        return this.metaData.content;
+    }
+
     public get subscribe(): { [key: string]: any } {
         return this.metaData.subscribe;
     }
 
-    public get initialParameters(): { [key: string]: any } {
-        if (!this._initialParameters) {
-            this._initialParameters = this.metaData.initialParameters;
+    public get initialParameter(): { [key: string]: any } {
+        if (!this._initialParameter) {
+            this._initialParameter = this.metaData.initialParameter;
         }
-        return this._initialParameters;
+        return this._initialParameter;
     }
 
-    public get filterParameters(): { [key: string]: any } {
-        if (!this._filterParameters) {
-            this._filterParameters = this.metaData.filter;
+    public get filterParameter(): { [key: string]: any } {
+        if (!this._filterParameter) {
+            this._filterParameter = this.metaData.filter;
         }
-        return this._filterParameters;
+        return this._filterParameter;
     }
 
     protected get stateStore(): fromService.StateStoreService {
@@ -78,7 +86,7 @@ export abstract class DynamicComponent {
         return this._stateStore;
     }
 
-    protected async renderChildrenComponent(): Promise<void> {
+    protected async renderChildrent(): Promise<void> {
         if (!this.metaData.content?.length) { return; }
         if (!this._childComponentContainer.size) {
             console.warn(`该组件是有定义子组件的,而组件却没有声明ViewContainerRef,请检查`);
