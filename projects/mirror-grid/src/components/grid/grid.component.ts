@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, Injector, forwardRef } from '@angular/core';
-import { DynamicComponent } from '@cxist/mirror-core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import * as fromCore from '@cxist/mirror-core';
 
 @Component({
     selector: 'mirror-grid',
@@ -8,46 +7,25 @@ import { FormGroup, FormBuilder } from '@angular/forms';
     styleUrls: ['./grid.component.scss'],
     providers: [
         {
-            provide: DynamicComponent,
+            provide: fromCore.DynamicComponent,
             useExisting: forwardRef(() => GridComponent)
         }
     ]
 })
-export class GridComponent extends DynamicComponent implements AfterViewInit, OnDestroy {
+export class GridComponent extends fromCore.DynamicComponent implements fromCore.IFilter {
 
-    public form: FormGroup;
     public constructor(
-        injector: Injector,
-        fb: FormBuilder
+        injector: Injector
     ) {
         super(injector);
-        this.form = fb.group({
-            name: ['Leon'],
-            age: [18]
-        });
+    }
+    
+    public async onNotify(notify: fromCore.INotification): Promise<void> {
+        console.log('grid get event', notify); 
     }
 
-    public async ngAfterViewInit(): Promise<void> {
-
-    }
-
-    public async ngOnDestroy(): Promise<void> {
-
-    }
-
-    public updateName(): void {
-        let data = this.form.value;
-        this.publishValueChange({ name: data.name });
-    }
-
-    public updateAge(): void {
-        let data = this.form.value;
-        this.publishValueChange({ age: data.age });
-    }
-
-    public update(): void {
-        let data = this.form.value;
-        this.publishValueChange(data);
+    public async filterParameterChange(data: { [key: string]: any; }): Promise<void> {
+        console.log('grid get filter data', data);
     }
 
 }

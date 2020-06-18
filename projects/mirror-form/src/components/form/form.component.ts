@@ -1,5 +1,5 @@
 import { Component, OnInit, forwardRef, Injector, AfterViewInit, OnDestroy } from '@angular/core';
-import { DynamicComponent, IInitializable } from '@cxist/mirror-core';
+import { DynamicComponent, IInitialize } from '@cxist/mirror-core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
@@ -13,7 +13,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
         }
     ]
 })
-export class FormComponent extends DynamicComponent implements OnDestroy, IInitializable {
+export class FormComponent extends DynamicComponent implements OnDestroy, IInitialize {
 
     public form: FormGroup;
     public constructor(

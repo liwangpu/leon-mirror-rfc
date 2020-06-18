@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { setScopeData } from '@cxist/mirror-core';
+import { setScopeData, PageNotifyOpsatService } from '@cxist/mirror-core';
 import { debounceTime } from 'rxjs/operators';
 
 @Component({
@@ -17,6 +17,7 @@ export class SimulatorComponent implements OnInit {
     public eventForm: FormGroup;
     public constructor(
         fb: FormBuilder,
+        private opsat: PageNotifyOpsatService,
         private store: Store<any>
     ) {
         this.scopeForm = fb.group({
@@ -56,7 +57,8 @@ export class SimulatorComponent implements OnInit {
     }
 
     public sendEvent(): void {
-
+        let { name, value } = this.eventForm.value;
+        this.opsat.publish(name, value);
     }
 
 }

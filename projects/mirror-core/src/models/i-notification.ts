@@ -1,5 +1,5 @@
 export interface INotification {
     source: string;
-    type: 'valueChange' | 'event';
+    // type?: string;
     target?: string;
 }

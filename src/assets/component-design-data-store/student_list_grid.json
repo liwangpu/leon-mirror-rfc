@@ -1,12 +1,12 @@
 {
     "title": "student_list_grid",
     "control": "grid",
-    "notify": [
+    "filter": {
+        "name": "{{name}}"
+    },
+    "subscribe": [
         {
-            "source": "name"
-        },
-        {
-            "source": "age"
+            "source": "refresh"
         }
     ]
 }

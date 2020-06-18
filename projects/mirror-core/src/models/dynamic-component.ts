@@ -38,11 +38,23 @@ export abstract class DynamicComponent {
         protected injector: Injector
     ) { }
 
+    public get key(): string {
+        return this.metaData.key;
+    }
+
+    public get title(): string {
+        return this.metaData.title;
+    }
+
     public get metaData(): IComponentMetaData {
         if (!this._metaData) {
             this._metaData = this.injector.get(fromToken.COMPONENTMETADATA, {});
         }
         return this._metaData;
+    }
+
+    public get subscribe(): { [key: string]: any } {
+        return this.metaData.subscribe;
     }
 
     public get initialParameters(): { [key: string]: any } {
@@ -65,8 +77,6 @@ export abstract class DynamicComponent {
         }
         return this._stateStore;
     }
-
-
 
     protected async renderChildrenComponent(): Promise<void> {
         if (!this.metaData.content?.length) { return; }

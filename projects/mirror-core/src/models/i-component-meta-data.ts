@@ -8,6 +8,7 @@ export interface IComponentMetaData {
     containerId?: string;
     content?: Array<IComponentMetaData>;
     notify?: Array<INotification>;
+    subscribe?: Array<INotification>;
     filter?: { [key: string]: any };
     initialParameters?: { [key: string]: any };
 }
