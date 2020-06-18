@@ -58,7 +58,7 @@ export class SimulatorComponent implements OnInit {
 
     public sendEvent(): void {
         let { name, value } = this.eventForm.value;
-        this.opsat.publish(name, value);
+        // this.opsat.publish(name, value);
     }
 
 }

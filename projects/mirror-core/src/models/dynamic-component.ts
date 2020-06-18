@@ -1,9 +1,16 @@
-import { Injector, ViewContainerRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { IComponentMetaData } from './i-component-meta-data';
+import { Injector, ViewContainerRef } from '@angular/core';
 import * as fromToken from '../tokens';
 import * as merge from 'deepmerge';
 import * as fromService from '../services';
 import * as fromTool from '../utils';
+import { INotification, notificationType } from './i-notification';
+import { MetaDataProvider } from './meta-data-provider';
+import { INotify } from './i-notify';
+import { IDataSource } from './i-data-source';
+
+function generateResourceChangeNotify(dataSourceKey: string, ids?: Array<string>): INotification {
+    return { type: notificationType.resourceChange, source: dataSourceKey, target: ids };
+}
 
 export function ChildComponentContainer(containerId?: string) {
     containerId = containerId || '';
@@ -27,56 +34,23 @@ export function ChildComponentContainer(containerId?: string) {
     }
 }
 
-export abstract class DynamicComponent {
+export abstract class DynamicComponent extends MetaDataProvider implements INotify {
 
-    private _metaData: IComponentMetaData;
+    private _opsat: fromService.PageNotifyOpsatService;
     private _stateStore: fromService.StateStoreService;
     private _childComponentContainer = new Map<string, ViewContainerRef>();
-    private _initialParameter: { [key: string]: any };
-    private _filterParameter: { [key: string]: any };
     public constructor(
-        protected injector: Injector
-    ) { }
-
-    public get key(): string {
-        return this.metaData.key;
+        injector: Injector
+    ) {
+        super(injector);
+        this.checkAndImplementDataSource();
     }
 
-    public get title(): string {
-        return this.metaData.title;
-    }
-
-    public get control(): string {
-        return this.metaData.control;
-    }
-
-    public get metaData(): IComponentMetaData {
-        if (!this._metaData) {
-            this._metaData = this.injector.get(fromToken.COMPONENTMETADATA, {});
+    private get opsat(): fromService.PageNotifyOpsatService {
+        if (!this._opsat) {
+            this._opsat = this.injector.get(fromService.PageNotifyOpsatService);
         }
-        return this._metaData;
-    }
-
-    public get content(): Array<IComponentMetaData> {
-        return this.metaData.content;
-    }
-
-    public get subscribe(): { [key: string]: any } {
-        return this.metaData.subscribe;
-    }
-
-    public get initialParameter(): { [key: string]: any } {
-        if (!this._initialParameter) {
-            this._initialParameter = this.metaData.initialParameter;
-        }
-        return this._initialParameter;
-    }
-
-    public get filterParameter(): { [key: string]: any } {
-        if (!this._filterParameter) {
-            this._filterParameter = this.metaData.filter;
-        }
-        return this._filterParameter;
+        return this._opsat;
     }
 
     protected get stateStore(): fromService.StateStoreService {
@@ -86,7 +60,7 @@ export abstract class DynamicComponent {
         return this._stateStore;
     }
 
-    protected async renderChildrent(): Promise<void> {
+    public async renderChildrent(): Promise<void> {
         if (!this.metaData.content?.length) { return; }
         if (!this._childComponentContainer.size) {
             console.warn(`该组件是有定义子组件的,而组件却没有声明ViewContainerRef,请检查`);
@@ -123,9 +97,9 @@ export abstract class DynamicComponent {
         }
     }
 
-    protected publishValueChange(data: { [key: string]: any }): void {
+    public publishScopeData(data: { [key: string]: any }): void {
         if (!data) { return; }
-        if (!this.metaData.notify?.length) { return; }
+        if (!this.notify?.length || !this.notify.some(x => x.type === 'valueChange')) { return; }
         let properties: Array<string> = Object.keys(data);
         if (!properties.length) { return; }
 
@@ -136,6 +110,29 @@ export abstract class DynamicComponent {
             scope[name] = fromTool.ObjectTool.recursionValueByField(data, it.source);
         });
         this.stateStore.setScopeData(scope);
+    }
+
+    public publishNotify(notify: INotification): void {
+        this.opsat.publish(notify);
+    }
+
+    private checkAndImplementDataSource(): void {
+        if (!this.dataSourceKey) { return; }
+
+        let dyc: DynamicComponent = this;
+        let dataSource: IDataSource = this as any;
+        if (typeof dataSource.createResource === 'function') {
+            let originCreateResource: Function = dataSource.createResource;
+            Object.defineProperty(this, dataSource.createResource.name, {
+                value: async function (...args: any[]) {
+                    let id = await originCreateResource.apply(this, args);
+                    let notify = generateResourceChangeNotify(dataSource.dataSourceKey, [id]);
+                    dyc.publishNotify(notify);
+                    return id;
+                }
+            });
+        }
+        // dataSource
     }
 
 }

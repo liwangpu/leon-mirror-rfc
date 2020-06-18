@@ -12,12 +12,14 @@ import { TokenSettingComponent } from './components/token-setting/token-setting.
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { SimulatorComponent } from './components/simulator/simulator.component';
+import { TestComponent } from './components/test/test.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         TokenSettingComponent,
-        SimulatorComponent
+        SimulatorComponent,
+        TestComponent
     ],
     imports: [
         BrowserModule,

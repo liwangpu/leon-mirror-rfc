@@ -16,10 +16,10 @@ export class PageNotifyOpsatService implements OnDestroy {
         // console.log('page opsat destroy');
     }
 
-    public publish(event: string, data?: any): void {
+    public publish(notify: INotification): void {
         if (this._message.isStopped || this._message.closed) {
             return;
         }
-        this._message.next({ source: event, target: data });
+        this._message.next(notify);
     }
 }

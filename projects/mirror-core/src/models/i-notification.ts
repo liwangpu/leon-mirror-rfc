@@ -1,5 +1,11 @@
+export enum notificationType {
+    valueChange = 'valueChange',
+    resourceChange = 'resourceChange',
+    event = 'event'
+}
+
 export interface INotification {
     source: string;
-    // type?: string;
-    target?: string;
+    type?: notificationType;
+    target?: any;
 }
