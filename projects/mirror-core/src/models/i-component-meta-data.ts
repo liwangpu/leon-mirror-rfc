@@ -13,4 +13,5 @@ export interface IComponentMetaData {
     filter?: { [key: string]: any };
     initialParameter?: { [key: string]: any };
     actions?: Array<IActionButton>;
+    itemActions?: Array<IActionButton>;
 }

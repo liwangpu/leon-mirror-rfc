@@ -1,0 +1,15 @@
+<mirror-dynamic-component>
+    <p>{{title}}</p>
+    <ul>
+        <li *ngFor='let it of grades'>
+            <span (click)='onSelect(it)' [class.active]='it.id===selectId'>
+                <span class="title">[{{it.remark}}]</span>
+                <span class="name"> {{it.name}}</span>
+            </span>
+
+            <ng-container *ngIf='it.id'>
+                <span *ngFor='let btn of itemActions' class="byz-icon bi-edit" (click)='onEdit(it,btn)'></span>
+            </ng-container>
+        </li>
+    </ul>
+</mirror-dynamic-component>

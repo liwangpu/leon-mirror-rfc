@@ -5,17 +5,17 @@ import * as faker from 'faker';
 import { map } from 'rxjs/operators';
 
 @Component({
-    selector: 'mirror-form',
-    templateUrl: './form.component.html',
-    styleUrls: ['./form.component.scss'],
+    selector: 'mirror-grade-form',
+    templateUrl: './grade-form.component.html',
+    styleUrls: ['./grade-form.component.scss'],
     providers: [
         {
             provide: fromCore.DynamicComponent,
-            useExisting: forwardRef(() => FormComponent)
+            useExisting: forwardRef(() => GradeFormComponent)
         }
     ]
 })
-export class FormComponent extends fromCore.DynamicComponent implements OnInit, fromCore.IInitialize, fromCore.IDataSource {
+export class GradeFormComponent extends fromCore.DynamicComponent implements OnInit, fromCore.IInitialize, fromCore.IDataSource {
 
     public form: FormGroup;
     public grades: Array<any>;
@@ -28,15 +28,12 @@ export class FormComponent extends fromCore.DynamicComponent implements OnInit, 
         this.form = fb.group({
             id: [],
             name: [],
-            age: [],
-            grade: [],
-            address: [],
             remark: []
         });
     }
 
     public async ngOnInit(): Promise<void> {
-        this.grades = await this.resourceDataStore.query('grade').pipe(map(res => res.items.map(x => ({ label: x.name, value: x.id })))).toPromise();
+
     }
 
     public async onResourceChange(ids?: string[]): Promise<void> {
@@ -76,17 +73,4 @@ export class FormComponent extends fromCore.DynamicComponent implements OnInit, 
         await this.updateResource(data);
     }
 
-    public randomStudent(): void {
-        let gradeIdx = faker.random.number({ min: 1, max: 3 });
-        let s = {
-            id: null,
-            name: faker.commerce.productName(),
-            age: faker.random.number({ min: 12, max: 14 }),
-            grade: this.grades[gradeIdx - 1].value,
-            address: faker.address.streetAddress(),
-            remark: faker.lorem.words()
-        };
-        this.form.patchValue(s);
-    }
 }
-

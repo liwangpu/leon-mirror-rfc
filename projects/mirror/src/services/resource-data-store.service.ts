@@ -15,38 +15,62 @@ export class ResourceDataStoreService implements fromCore.IResourceDataStore {
                     name: '小明',
                     age: 12,
                     remark: '一个帅锅',
+                    grade: 'g1',
                     address: '南京东路1号'
                 },
                 {
                     id: 2,
                     name: '小黑',
-                    age: 8,
+                    age: 11,
                     remark: '其实也没有辣么黑',
+                    grade: 'g1',
                     address: '江湾体育场2号'
                 },
                 {
                     id: 3,
                     name: '乐乐',
-                    age: 11,
+                    age: 13,
                     remark: '乐观开朗',
+                    grade: 'g2',
                     address: '南京东路12号'
                 },
                 {
                     id: 4,
                     name: '笑笑',
-                    age: 15,
+                    age: 12,
                     remark: '有着天使般的笑容',
+                    grade: 'g2',
                     address: '南京东路16号'
                 },
                 {
                     id: 5,
                     name: '小张',
-                    age: 12,
+                    age: 14,
                     remark: '很酷,不解释',
+                    grade: 'g3',
                     address: '北京1路'
                 }
             ];
             this.memoryStore.set('student', students);
+
+            let grades = [
+                {
+                    id: 'g1',
+                    name: '初一',
+                    remark: '萌新'
+                },
+                {
+                    id: 'g2',
+                    name: '初二',
+                    remark: '逗比'
+                },
+                {
+                    id: 'g3',
+                    name: '初三',
+                    remark: '大佬'
+                }
+            ];
+            this.memoryStore.set('grade', grades);
         } else {
             let map: { [key: string]: Array<any> } = JSON.parse(memoryStoreStr);
             let keys = Object.keys(map);
@@ -62,9 +86,21 @@ export class ResourceDataStoreService implements fromCore.IResourceDataStore {
         return of(fromCore.ObjectTool.deepCopy(entity));
     }
 
-    public query<T = any>(resource: string, queryParam?: object): Observable<fromCore.IQueryResult<T>> {
+    public query<T = any>(resource: string, queryParam?: any): Observable<fromCore.IQueryResult<T>> {
         let items = this.memoryStore.get(resource) || [];
         let datas = fromCore.ObjectTool.deepCopy(items);
+        if (resource === 'student') {
+            let grades = this.memoryStore.get('grade') || [];
+            datas.forEach(s => {
+                let g = grades.filter(x => x.id === s.grade)[0];
+                s['gradeName'] = g.name;
+            });
+            if (queryParam && queryParam.grade) {
+                let { grade } = queryParam;
+                return of({ items: datas.filter(x => x.grade === grade) });
+            }
+        }
+
         return of({ items: datas });
     }
 

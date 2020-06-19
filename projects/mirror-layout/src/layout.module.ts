@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BlankLayoutComponent } from './components/blank-layout/blank-layout.component';
 import { ComponentRegistryService } from './services/component-registry.service';
 import { COMPONENTREGISTRY } from '@cxist/mirror-core';
 import { SharedModule as MirrorSharedModule } from '@cxist/mirror-shared';
+import * as fromComponent from './components';
 
 
 @NgModule({
-    declarations: [BlankLayoutComponent],
+    declarations: [...fromComponent.components],
     imports: [
         CommonModule,
         MirrorSharedModule

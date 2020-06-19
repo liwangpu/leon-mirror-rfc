@@ -2,9 +2,14 @@
     "key": "student_list",
     "title": "学生列表",
     "layout": {
-        "control": "blank-layout",
+        "control": "three-column-layout",
         "content": [
             {
+                "containerId": "left",
+                "key": "grade_tree_view"
+            },
+            {
+                "containerId": "right",
                 "key": "student_list_tab"
             }
         ]

@@ -1,0 +1,19 @@
+{
+    "title": "学生班级",
+    "control": "tree-view",
+    "dataSourceKey": "grade",
+    "itemActions": [
+        {
+            "title": "编辑",
+            "type": "dialog",
+            "target": "grade_edit_form"
+        }
+    ],
+    "notify": [
+        {
+            "source": "id",
+            "type": "valueChange",
+            "target": "gradeId"
+        }
+    ]
+}

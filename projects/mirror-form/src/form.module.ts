@@ -5,15 +5,21 @@ import { ComponentRegistryService } from './services/component-registry.service'
 import { COMPONENTREGISTRY } from '@cxist/mirror-core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@cxist/mirror-shared';
+import * as fromOrion from '@byzan/orion2';
+import { GradeFormComponent } from './components/grade-form/grade-form.component';
 
 @NgModule({
-    declarations: [FormComponent],
+    declarations: [FormComponent, GradeFormComponent],
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        SharedModule
+        SharedModule,
+        fromOrion.InputModule,
+        fromOrion.SelectModule,
+        fromOrion.FormModule,
+        fromOrion.ButtonModule
     ],
-    providers:[
+    providers: [
         ComponentRegistryService,
         {
             provide: COMPONENTREGISTRY,

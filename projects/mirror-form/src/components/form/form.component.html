@@ -1,19 +1,28 @@
 <mirror-dynamic-component>
-    <form [formGroup]='form'>
-        <input type="hidden" formControlName='id'>
-        <div>
-            <label>姓名</label>
-            <input type="text" formControlName='name'>
-        </div>
-        <div>
-            <label>年纪</label>
-            <input type="number" formControlName='age'>
-        </div>
-        <div>
-            <label>备注</label>
-            <input type="text" formControlName='remark'>
-        </div>
-        <button (click)='save()'>保存</button>
-        <button (click)='randomStudent()'>随机一个学生</button>
+    <form byzForm [formGroup]="form" labelPosition='left' [cols]="1">
+        <byz-form-item label="姓名" order="1" required='true'>
+            <byz-input type="text" formControlName="name">
+            </byz-input>
+        </byz-form-item>
+        <byz-form-item label="年纪" order="2" required='true'>
+            <byz-input type="text" formControlName="age">
+            </byz-input>
+        </byz-form-item>
+        <byz-form-item label="年级" required="true">
+            <byz-select [options]="grades" formControlName="grade" [showClear]="true">
+            </byz-select>
+        </byz-form-item>
+        <byz-form-item label="地址" order="4">
+            <byz-input type="text" formControlName="address">
+            </byz-input>
+        </byz-form-item>
+        <byz-form-item label="备注" order="5">
+            <byz-input type="text" formControlName="remark">
+            </byz-input>
+        </byz-form-item>
     </form>
+    <div class="button">
+        <byz-button type="default" (click)='randomStudent()'>随机一个学生</byz-button>
+        <byz-button type="primary" (click)='save()' [disabled]='!form.valid'>保存</byz-button>
+    </div>
 </mirror-dynamic-component>

@@ -1,8 +1,8 @@
 {
-    "title": "student_edit_form",
+    "title": "student_create_form",
     "control": "form",
     "dataSourceKey": "student",
     "initialParameter": {
-        "id": "{{studentId}}"
+        "grade": "{{gradeId}}"
     }
 }

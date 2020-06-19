@@ -1,31 +1,13 @@
 form {
     display: block;
     width: 100%;
+}
 
-    &>div {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        height: 34px;
+div.button {
+    display: flex;
+    justify-content: flex-end;
 
-        label {
-            display: inline-block;
-            width: 80px;
-        }
-
-        input {
-            flex: 1;
-        }
-    }
-
-    button {
-        margin-left: 10px;
-        &:first-of-type {
-            margin-left: 80px;
-        }
-
-        &:hover {
-            cursor: pointer;
-        }
+    &>* {
+        margin-left: 1em;
     }
 }

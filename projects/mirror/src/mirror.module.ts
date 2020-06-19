@@ -8,6 +8,7 @@ import { GridModule as MirrorGridModule } from '@cxist/mirror-grid';
 import { PanelModule as MirrorPanelModule } from '@cxist/mirror-panel';
 import { FormModule as MirrorFormModule } from '@cxist/mirror-form';
 import * as fromOrion from '@byzan/orion2';
+import { TreeViewModule as MirrorTreeViewModule } from '@cxist/mirror-tree-view';
 
 @NgModule({
     declarations: [],
@@ -18,6 +19,7 @@ import * as fromOrion from '@byzan/orion2';
         MirrorPanelModule,
         MirrorGridModule,
         MirrorFormModule,
+        MirrorTreeViewModule,
         fromCore.StateStoreModule,
         fromOrion.DynamicDialogModule
     ],

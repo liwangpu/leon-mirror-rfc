@@ -1,0 +1,8 @@
+{
+    "title": "grade_edit_form",
+    "control": "grade-form",
+    "dataSourceKey": "grade",
+    "initialParameter": {
+        "id": "{{gradeId}}"
+    }
+}

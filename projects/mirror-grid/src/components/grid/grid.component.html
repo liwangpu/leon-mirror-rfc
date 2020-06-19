@@ -10,6 +10,7 @@
                 <tr>
                     <th>姓名</th>
                     <th>年纪</th>
+                    <th>年级</th>
                     <th>备注</th>
                     <th>地址</th>
                     <th>操作</th>
@@ -19,10 +20,11 @@
                 <tr *ngFor='let it of datas'>
                     <td>{{it.name}}</td>
                     <td>{{it.age}}</td>
+                    <td>{{it.gradeName}}</td>
                     <td>{{it.remark}}</td>
                     <td>{{it.address}}</td>
                     <td>
-                        <button (click)='edit(it)'>编辑</button>
+                        <button *ngFor='let btn of itemActions' (click)='edit(it,btn)'>{{btn.title}}</button>
                     </td>
                 </tr>
             </tbody>

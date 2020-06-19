@@ -1,0 +1,13 @@
+form {
+    display: block;
+    width: 100%;
+}
+
+div.button {
+    display: flex;
+    justify-content: flex-end;
+
+    &>* {
+        margin-left: 1em;
+    }
+}

@@ -40,6 +40,9 @@
             "@cxist/mirror-form": [
                 "projects/mirror-form/src/public-api.ts"
             ],
+            "@cxist/mirror-tree-view": [
+                "projects/mirror-tree-view/src/public-api.ts"
+            ]
         }
     },
     "angularCompilerOptions": {

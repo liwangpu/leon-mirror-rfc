@@ -38,6 +38,10 @@ export class MetaDataProvider {
         return this.metaData.actions;
     }
 
+    public get itemActions(): Array<IActionButton> {
+        return this.metaData.itemActions;
+    }
+
     public get subscribe(): Array<INotification> {
         return this.metaData.subscribe;
     }

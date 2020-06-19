@@ -1,0 +1,15 @@
+<mirror-dynamic-component>
+    <form byzForm [formGroup]="form" labelPosition='left' [cols]="1">
+        <byz-form-item label="姓名" order="1" required='true'>
+            <byz-input type="text" formControlName="name">
+            </byz-input>
+        </byz-form-item>
+        <byz-form-item label="备注" order="5">
+            <byz-input type="text" formControlName="remark">
+            </byz-input>
+        </byz-form-item>
+    </form>
+    <div class="button">
+        <byz-button type="primary" (click)='save()' [disabled]='!form.valid'>保存</byz-button>
+    </div>
+</mirror-dynamic-component>

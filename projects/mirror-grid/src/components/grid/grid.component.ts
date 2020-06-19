@@ -20,6 +20,7 @@ export class GridComponent extends fromCore.DynamicComponent implements OnInit, 
     public button: ViewContainerRef;
     private _resourceDataStore: fromCore.IResourceDataStore;
     private _buttonHandler: fromCore.IActionButtonHandler;
+    private grade: string;
     public constructor(
         injector: Injector
     ) {
@@ -41,7 +42,7 @@ export class GridComponent extends fromCore.DynamicComponent implements OnInit, 
     }
 
     public async ngOnInit(): Promise<void> {
-        this.query();
+        // this.query();
         await this.renderChildrent();
     }
 
@@ -66,25 +67,21 @@ export class GridComponent extends fromCore.DynamicComponent implements OnInit, 
         console.log('grid get event', notify);
     }
 
-    public async edit(data: any): Promise<void> {
-        this.stateStore.setScopeData({ id: data.id });
-        let button: fromCore.IActionButton = {
-            title: '编辑',
-            type: 'dialog',
-            target: 'student_edit_form',
-            parameters: {
-                id: '{{id}}'
-            }
-        };
+    public async edit(data: any, button: fromCore.IActionButton): Promise<void> {
+        this.publishScopeData(data);
         this.buttonHandler.onClick(button);
     }
 
     public async filterParameterChange(data: { [key: string]: any; }): Promise<void> {
-        console.log('grid get filter data', data);
+        // console.log('grid get filter data', data);
+        if (data) {
+            this.grade = data.grade;
+        }
+        this.query();
     }
 
     private query() {
-        this.resourceDataStore.query(this.dataSourceKey).subscribe(res => this.datas = res.items);
+        this.resourceDataStore.query(this.dataSourceKey, { grade: this.grade }).subscribe(res => this.datas = res.items);
     }
 
 }
