@@ -1,9 +1,17 @@
 {
     "title": "student_list_grid",
     "control": "grid",
-    "filter": {
-        "name": "{{name}}"
-    },
+    "dataSourceKey": "student",
+    "actions": [
+        {
+            "title": "新建",
+            "type": "dialog",
+            "target": "student_edit_form",
+            "parameters": {
+                "id": "{{id}}"
+            }
+        }
+    ],
     "subscribe": [
         {
             "source": "refresh"

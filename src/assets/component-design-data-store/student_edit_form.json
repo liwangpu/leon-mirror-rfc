@@ -1,9 +1,8 @@
 {
     "title": "student_edit_form",
     "control": "form",
+    "dataSourceKey": "student",
     "initialParameter": {
-        "name": "{{name}}",
-        "age": 12,
-        "remark": "系统自动生成"
+        "id": "{{id}}"
     }
 }

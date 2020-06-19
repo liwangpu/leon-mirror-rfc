@@ -1,20 +1,19 @@
 <mirror-dynamic-component>
-    <div class="form">
-        <span>form</span>
-        <form [formGroup]='form'>
-            <div>
-                <label>姓名</label>
-                <input type="text" formControlName='name'>
-            </div>
-            <div>
-                <label>年纪</label>
-                <input type="number" formControlName='age'>
-            </div>
-            <div>
-                <label>备注</label>
-                <input type="text" formControlName='remark'>
-            </div>
-            <!-- <button (click)='save()'>更新</button> -->
-        </form>
-    </div>
+    <form [formGroup]='form'>
+        <input type="hidden" formControlName='id'>
+        <div>
+            <label>姓名</label>
+            <input type="text" formControlName='name'>
+        </div>
+        <div>
+            <label>年纪</label>
+            <input type="number" formControlName='age'>
+        </div>
+        <div>
+            <label>备注</label>
+            <input type="text" formControlName='remark'>
+        </div>
+        <button (click)='save()'>保存</button>
+        <button (click)='randomStudent()'>随机一个学生</button>
+    </form>
 </mirror-dynamic-component>

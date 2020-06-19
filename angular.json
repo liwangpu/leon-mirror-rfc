@@ -28,6 +28,8 @@
                             "src/assets"
                         ],
                         "styles": [
+                            "node_modules/@byzan/orion2/resources/orion.scss",
+                            "node_modules/@byzan/orion2/resources/orionicons.css",
                             "projects/mirror/src/resources/mirror.scss",
                             "src/styles.scss"
                         ],

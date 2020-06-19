@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Optional } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { setScopeData, PageNotifyOpsatService } from '@cxist/mirror-core';
@@ -17,7 +17,7 @@ export class SimulatorComponent implements OnInit {
     public eventForm: FormGroup;
     public constructor(
         fb: FormBuilder,
-        private opsat: PageNotifyOpsatService,
+        @Optional() private opsat: PageNotifyOpsatService,
         private store: Store<any>
     ) {
         this.scopeForm = fb.group({
@@ -58,7 +58,7 @@ export class SimulatorComponent implements OnInit {
 
     public sendEvent(): void {
         let { name, value } = this.eventForm.value;
-        // this.opsat.publish(name, value);
+        this.opsat.publish({ source: name, type: 'event', target: value });
     }
 
 }

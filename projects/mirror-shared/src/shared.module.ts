@@ -8,7 +8,11 @@ import * as fromComponent from './components';
         CommonModule
     ],
     exports: [
-        fromComponent.DynamicComponentComponent
+        fromComponent.DynamicComponentComponent,
+        fromComponent.DynamicModalComponent
+    ],
+    entryComponents: [
+        fromComponent.DynamicModalComponent
     ]
 })
 export class SharedModule { }

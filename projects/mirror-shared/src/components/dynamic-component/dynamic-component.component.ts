@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, HostBinding, HostListener, ChangeDetectio
 import * as fromCore from '@cxist/mirror-core';
 import { SubSink } from 'subsink';
 import { filter } from 'rxjs/operators';
+import { notificationType } from '@cxist/mirror-core';
 
 function satisfyVariables(variables: Array<string>): any {
     return filter(scope => {
@@ -57,6 +58,11 @@ export class DynamicComponentComponent implements OnInit, OnDestroy {
         return presentation.subscribe && presentation.subscribe.length && typeof presentation.onNotify === 'function';
     }
 
+    private get checkPresentationIsDataSource(): boolean {
+        let presentation: fromCore.IDataSource = this.dyc as any;
+        return presentation.dataSourceKey && typeof presentation.onResourceChange === 'function';
+    }
+
     public ngOnDestroy(): void {
         this.subs.unsubscribe();
     }
@@ -76,6 +82,9 @@ export class DynamicComponentComponent implements OnInit, OnDestroy {
             this.presentationImplementSubscribe();
         }
 
+        if (this.checkPresentationIsDataSource) {
+            this.presentationImplementResourceChange();
+        }
     }
 
     private presentationImplementInitialization(): void {
@@ -115,7 +124,17 @@ export class DynamicComponentComponent implements OnInit, OnDestroy {
         let presentation: fromCore.ISubscribe = this.dyc as any;
 
         this.subs.sink = this.opsat.message.subscribe(async notify => {
+            if (!presentation.subscribe.some(x => x.source == notify.source)) { return; }
             await presentation.onNotify(notify);
+        });
+    }
+
+    private presentationImplementResourceChange(): void {
+        let presentation: fromCore.IDataSource = this.dyc as any;
+        this.subs.sink = this.opsat.message.subscribe(async notify => {
+            if (notify.type !== notificationType.resourceChange || notify.source !== presentation.dataSourceKey) { return; }
+
+            await presentation.onResourceChange(notify.target);
         });
     }
 

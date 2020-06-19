@@ -6,6 +6,6 @@ export enum notificationType {
 
 export interface INotification {
     source: string;
-    type?: notificationType;
+    type?: notificationType | string;
     target?: any;
 }

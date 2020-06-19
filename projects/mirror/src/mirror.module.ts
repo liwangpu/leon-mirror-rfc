@@ -7,6 +7,7 @@ import * as fromCore from '@cxist/mirror-core';
 import { GridModule as MirrorGridModule } from '@cxist/mirror-grid';
 import { PanelModule as MirrorPanelModule } from '@cxist/mirror-panel';
 import { FormModule as MirrorFormModule } from '@cxist/mirror-form';
+import * as fromOrion from '@byzan/orion2';
 
 @NgModule({
     declarations: [],
@@ -17,7 +18,8 @@ import { FormModule as MirrorFormModule } from '@cxist/mirror-form';
         MirrorPanelModule,
         MirrorGridModule,
         MirrorFormModule,
-        fromCore.StateStoreModule
+        fromCore.StateStoreModule,
+        fromOrion.DynamicDialogModule
     ],
     providers: [
         fromCore.StateStoreService,
@@ -25,6 +27,8 @@ import { FormModule as MirrorFormModule } from '@cxist/mirror-form';
         fromService.ComponentDiscoveryService,
         fromService.PageMetaDataStoreService,
         fromService.ComponentDesignDataStoreService,
+        fromService.ResourceDataStoreService,
+        fromCore.PageNotifyOpsatService,
         {
             provide: fromCore.COMPONENTDISCOVERY,
             useExisting: fromService.ComponentDiscoveryService,
@@ -36,6 +40,10 @@ import { FormModule as MirrorFormModule } from '@cxist/mirror-form';
         {
             provide: fromCore.COMPONENTDESIGNDATASTORE,
             useExisting: fromService.ComponentDesignDataStoreService
+        },
+        {
+            provide: fromCore.RESOURCEDATASTORE,
+            useExisting: fromService.ResourceDataStoreService
         },
     ]
 })

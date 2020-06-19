@@ -12,12 +12,12 @@ function generateResourceChangeNotify(dataSourceKey: string, ids?: Array<string>
     return { type: notificationType.resourceChange, source: dataSourceKey, target: ids };
 }
 
-export function ChildComponentContainer(containerId?: string) {
+export function DyContainer(containerId?: string) {
     containerId = containerId || '';
     return function (target: Object, propertyName: string) {
         let _val = null;
         function setter(val: any) {
-            this._childComponentContainer.set(containerId, val);
+            this._dyContainer.set(containerId, val);
             _val = val;
         }
 
@@ -38,12 +38,28 @@ export abstract class DynamicComponent extends MetaDataProvider implements INoti
 
     private _opsat: fromService.PageNotifyOpsatService;
     private _stateStore: fromService.StateStoreService;
-    private _childComponentContainer = new Map<string, ViewContainerRef>();
+    private _dyContainer = new Map<string, ViewContainerRef>();
+    private _componentDiscoverySrv: fromToken.IComponentDiscovery;
+    private _componentDesignDataStore: fromToken.IComponentDesignDataStore;
     public constructor(
         injector: Injector
     ) {
         super(injector);
         this.checkAndImplementDataSource();
+    }
+
+    private get componentDiscoverySrv(): fromToken.IComponentDiscovery {
+        if (!this._componentDiscoverySrv) {
+            this._componentDiscoverySrv = this.injector.get(fromToken.COMPONENTDISCOVERY);
+        }
+        return this._componentDiscoverySrv;
+    }
+
+    private get componentDesignDataStore(): fromToken.IComponentDesignDataStore {
+        if (!this._componentDesignDataStore) {
+            this._componentDesignDataStore = this.injector.get(fromToken.COMPONENTDESIGNDATASTORE);
+        }
+        return this._componentDesignDataStore;
     }
 
     private get opsat(): fromService.PageNotifyOpsatService {
@@ -61,40 +77,8 @@ export abstract class DynamicComponent extends MetaDataProvider implements INoti
     }
 
     public async renderChildrent(): Promise<void> {
-        if (!this.metaData.content?.length) { return; }
-        if (!this._childComponentContainer.size) {
-            console.warn(`该组件是有定义子组件的,而组件却没有声明ViewContainerRef,请检查`);
-            return;
-        }
-
-        const componentDiscoverySrv: fromToken.IComponentDiscovery = this.injector.get(fromToken.COMPONENTDISCOVERY);
-        const componentDesignDataStore: fromToken.IComponentDesignDataStore = this.injector.get(fromToken.COMPONENTDESIGNDATASTORE);
-        for (let cmd of this.metaData.content) {
-            if (cmd.key) {
-                let m = await componentDesignDataStore.getMetaData(cmd.key).toPromise();
-                cmd = merge(cmd, m);
-            }
-            let fac = componentDiscoverySrv.generateComponentFactory(cmd.control);
-            if (!fac) {
-                console.error(`组件库里面没有找到control为${cmd.control}的组件,请检查是否注册或者写错`, cmd);
-                continue;
-            }
-
-            const ij = Injector.create([
-                {
-                    provide: fromToken.COMPONENTMETADATA,
-                    useValue: cmd
-                }
-            ], this.injector);
-            let containerId: string = cmd.containerId || '';
-            let vc = this._childComponentContainer.get(containerId);
-            // debugger;
-            if (!vc) {
-                console.error(`没有找到containerId为 "${containerId}" 的ViewContainerRef,请检查containerId是否写错或者动态组件宿主是否已经提供该Ref`);
-                continue;
-            }
-            vc.createComponent(fac, null, ij);
-        }
+        await this.renderContentChildren();
+        await this.renderButtonChildren();
     }
 
     public publishScopeData(data: { [key: string]: any }): void {
@@ -133,6 +117,63 @@ export abstract class DynamicComponent extends MetaDataProvider implements INoti
             });
         }
         // dataSource
+    }
+
+    private async renderContentChildren(): Promise<void> {
+        if (!this.metaData.content?.length) { return; }
+        if (!this._dyContainer.size) {
+            console.warn(`该组件是有定义子组件的,而组件却没有声明任何DyContainer,请检查`);
+            return;
+        }
+
+        for (let cmd of this.metaData.content) {
+            if (cmd.key) {
+                let m = await this.componentDesignDataStore.getMetaData(cmd.key).toPromise();
+                cmd = merge(cmd, m);
+            }
+            let fac = this.componentDiscoverySrv.generateComponentFactory(cmd.control);
+            if (!fac) {
+                console.error(`组件库里面没有找到control为${cmd.control}的组件,请检查是否注册或者写错`, cmd);
+                continue;
+            }
+
+            const ij = Injector.create([
+                {
+                    provide: fromToken.COMPONENTMETADATA,
+                    useValue: cmd
+                }
+            ], this.injector);
+            let containerId: string = cmd.containerId || '';
+            let vc = this._dyContainer.get(containerId);
+            if (!vc) {
+                console.error(`没有找到containerId为 "${containerId}" 的ViewContainerRef,请检查containerId是否写错或者动态组件宿主是否已经提供该Ref`);
+                continue;
+            }
+            vc.createComponent(fac, null, ij);
+        }
+    }
+
+    private async renderButtonChildren(): Promise<void> {
+        if (!this.actions || !this.actions.length) { return; }
+        if (!this._dyContainer.size || !this._dyContainer.get('button')) {
+            console.warn(`该组件是有定义按钮的,而组件却没有声明类型为button的DyContainer,请检查`);
+            return;
+        }
+
+        let fac = this.componentDiscoverySrv.generateComponentFactory('action-button');
+        if (!fac) {
+            console.error(`组件库里面没有找到control为action-button的组件,请检查是否注册或者写错`);
+            return;
+        }
+
+        const ij = Injector.create([
+            {
+                provide: fromToken.ACTIONBUTTONMETADATA,
+                useValue: this.actions
+            }
+        ], this.injector);
+        const vc = this._dyContainer.get('button');
+        vc.createComponent(fac, null, ij);
     }
 
 }

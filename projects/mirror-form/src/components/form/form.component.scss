@@ -1,8 +1,31 @@
-div.form {
+form {
+    display: block;
     width: 100%;
-    height: 200px;
-    border: 1px solid gray;
-    span{
-        color: blue;
+
+    &>div {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        height: 34px;
+
+        label {
+            display: inline-block;
+            width: 80px;
+        }
+
+        input {
+            flex: 1;
+        }
+    }
+
+    button {
+        margin-left: 10px;
+        &:first-of-type {
+            margin-left: 80px;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
     }
 }

@@ -2,6 +2,7 @@ import { Injector } from '@angular/core';
 import { IComponentMetaData } from './i-component-meta-data';
 import * as fromToken from '../tokens';
 import { INotification } from './i-notification';
+import { IActionButton } from './i-action-button';
 
 export class MetaDataProvider {
 
@@ -31,6 +32,10 @@ export class MetaDataProvider {
 
     public get content(): Array<IComponentMetaData> {
         return this.metaData.content;
+    }
+
+    public get actions(): Array<IActionButton> {
+        return this.metaData.actions;
     }
 
     public get subscribe(): Array<INotification> {

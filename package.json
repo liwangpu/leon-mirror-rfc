@@ -11,6 +11,8 @@
     },
     "private": true,
     "dependencies": {
+        "@ag-grid-community/angular": "^23.0.3",
+        "@ag-grid-enterprise/all-modules": "^23.0.2",
         "@angular/animations": "~9.1.9",
         "@angular/common": "~9.1.9",
         "@angular/compiler": "~9.1.9",
@@ -23,7 +25,9 @@
         "@ngrx/router-store": "^9.2.0",
         "@ngrx/store": "^9.2.0",
         "@ngrx/store-devtools": "^9.2.0",
+        "@byzan/orion2": "^0.2.47635",
         "deepmerge": "^4.2.2",
+        "faker": "^4.1.0",
         "lodash": "^4.17.15",
         "query-string": "^6.12.1",
         "rxjs": "~6.5.4",

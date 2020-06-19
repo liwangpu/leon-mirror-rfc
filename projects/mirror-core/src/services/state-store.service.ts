@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import * as fromStore from '../state-store';
 import * as fromModel from '../models';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Injectable()
 export class StateStoreService {
@@ -37,5 +38,9 @@ export class StateStoreService {
 
     public resetPreviewMode(enable: boolean): void {
         this.store.dispatch(fromStore.setPreviewMode({ enable }));
+    }
+
+    public async getScopeDataSnapshot(): Promise<{ [key: string]: any }> {
+        return this.scopeData$.pipe(take(1)).toPromise();
     }
 }
