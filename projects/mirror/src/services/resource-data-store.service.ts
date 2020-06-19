@@ -56,6 +56,12 @@ export class ResourceDataStoreService implements fromCore.IResourceDataStore {
         }
     }
 
+    public get<T = any>(resource: string, id: string): Observable<T> {
+        let items = this.memoryStore.get(resource) || [];
+        let entity = items.filter(x => x.id === id)[0];
+        return of(fromCore.ObjectTool.deepCopy(entity));
+    }
+
     public query<T = any>(resource: string, queryParam?: object): Observable<fromCore.IQueryResult<T>> {
         let items = this.memoryStore.get(resource) || [];
         let datas = fromCore.ObjectTool.deepCopy(items);
@@ -69,6 +75,15 @@ export class ResourceDataStoreService implements fromCore.IResourceDataStore {
         items.push(data);
         this.persistentStore();
         return of(data);
+    }
+
+    public patch<T = any>(resource: string, id: string, entity: any): Observable<T> {
+        let items = this.memoryStore.get(resource) || [];
+        let index = items.findIndex(x => x.id === id);
+        items[index] = entity;
+        this.memoryStore.set(resource, items);
+        this.persistentStore();
+        return of(entity);
     }
 
     private persistentStore(): void {

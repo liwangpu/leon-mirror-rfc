@@ -42,7 +42,7 @@ export class FormComponent extends fromCore.DynamicComponent implements OnDestro
     }
 
     public async updateResource(entity: { id: string, [key: string]: any }): Promise<void> {
-
+        await this.resourceDataStore.patch(this.dataSourceKey, entity.id, entity).toPromise();
     }
 
     public async deleteResource(id: string): Promise<void> {
@@ -54,7 +54,11 @@ export class FormComponent extends fromCore.DynamicComponent implements OnDestro
     }
 
     public async InitialParameterChange(data: { [key: string]: any; }): Promise<void> {
-        console.log('form get initialize data', data);
+        // console.log('form get initialize data', data);
+        if (data.id) {
+            let entity = await this.resourceDataStore.get(this.dataSourceKey, data.id).toPromise();
+            data = { ...entity, ...data };
+        }
         this.form.patchValue(data);
     }
 
@@ -71,6 +75,7 @@ export class FormComponent extends fromCore.DynamicComponent implements OnDestro
 
     public randomStudent(): void {
         let s = {
+            id: null,
             name: faker.commerce.productName(),
             age: faker.random.number({ min: 8, max: 30 }),
             address: faker.address.streetAddress(),

@@ -116,7 +116,21 @@ export abstract class DynamicComponent extends MetaDataProvider implements INoti
                 }
             });
         }
-        // dataSource
+
+
+        if (typeof dataSource.updateResource === 'function') {
+            let originUpdateResource: Function = dataSource.updateResource;
+            Object.defineProperty(this, dataSource.updateResource.name, {
+                value: async function (...args: any[]) {
+                    let entity = args[0];
+                    await originUpdateResource.apply(this, args);
+                    let notify = generateResourceChangeNotify(dataSource.dataSourceKey, [entity.id]);
+                    dyc.publishNotify(notify);
+                    console.log(notify);
+                    return;
+                }
+            });
+        }
     }
 
     private async renderContentChildren(): Promise<void> {

@@ -19,6 +19,7 @@ export class GridComponent extends fromCore.DynamicComponent implements OnInit, 
     @ViewChild('button', { static: true, read: ViewContainerRef })
     public button: ViewContainerRef;
     private _resourceDataStore: fromCore.IResourceDataStore;
+    private _buttonHandler: fromCore.IActionButtonHandler;
     public constructor(
         injector: Injector
     ) {
@@ -30,6 +31,13 @@ export class GridComponent extends fromCore.DynamicComponent implements OnInit, 
             this._resourceDataStore = this.injector.get(fromCore.RESOURCEDATASTORE);
         }
         return this._resourceDataStore;
+    }
+
+    protected get buttonHandler(): fromCore.IActionButtonHandler {
+        if (!this._buttonHandler) {
+            this._buttonHandler = this.injector.get(fromCore.ACTIONBUTTONHANDLER);
+        }
+        return this._buttonHandler;
     }
 
     public async ngOnInit(): Promise<void> {
@@ -56,6 +64,19 @@ export class GridComponent extends fromCore.DynamicComponent implements OnInit, 
 
     public async onNotify(notify: fromCore.INotification): Promise<void> {
         console.log('grid get event', notify);
+    }
+
+    public async edit(data: any): Promise<void> {
+        this.stateStore.setScopeData({ id: data.id });
+        let button: fromCore.IActionButton = {
+            title: '编辑',
+            type: 'dialog',
+            target: 'student_edit_form',
+            parameters: {
+                id: '{{id}}'
+            }
+        };
+        this.buttonHandler.onClick(button);
     }
 
     public async filterParameterChange(data: { [key: string]: any; }): Promise<void> {
