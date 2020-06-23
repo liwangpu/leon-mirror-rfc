@@ -22,7 +22,7 @@
     "notify": [
         {
             "source": "id",
-            "type": "valueChange",
+            "type": "edit",
             "target": "studentId"
         }
     ]

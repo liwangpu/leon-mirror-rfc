@@ -60,11 +60,16 @@ export class TreeViewComponent extends fromCore.DynamicComponent implements OnIn
 
     public onSelect(data: any): void {
         this.selectId = data.id;
-        this.publishScopeData(data);
+
+        let scope = {};
+        fromCore.assignScopeByNotify(scope, data, this.notify.filter(x => x.type === 'select')[0]);
+        this.publishScopeData(scope);
     }
 
-    public onEdit(data: any,button:fromCore.IActionButton): void {
-        this.publishScopeData(data);
+    public onEdit(data: any, button: fromCore.IActionButton): void {
+        let scope = {};
+        fromCore.assignScopeByNotify(scope, data, this.notify.filter(x => x.type === 'edit')[0]);
+        this.publishScopeData(scope);
         this.buttonHandler.onClick(button);
     }
 

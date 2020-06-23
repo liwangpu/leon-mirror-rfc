@@ -68,7 +68,9 @@ export class GridComponent extends fromCore.DynamicComponent implements OnInit, 
     }
 
     public async edit(data: any, button: fromCore.IActionButton): Promise<void> {
-        this.publishScopeData(data);
+        let scope = {};
+        fromCore.assignScopeByNotify(scope, data, this.notify.filter(x => x.type === 'edit')[0]);
+        this.publishScopeData(scope);
         this.buttonHandler.onClick(button);
     }
 

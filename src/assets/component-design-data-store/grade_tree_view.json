@@ -12,8 +12,13 @@
     "notify": [
         {
             "source": "id",
-            "type": "valueChange",
+            "type": "select",
             "target": "gradeId"
+        },
+        {
+            "source": "id",
+            "type": "edit",
+            "target": "edit_gradeId"
         }
     ]
 }

@@ -3,6 +3,6 @@
     "control": "grade-form",
     "dataSourceKey": "grade",
     "initialParameter": {
-        "id": "{{gradeId}}"
+        "id": "{{edit_gradeId}}"
     }
 }
