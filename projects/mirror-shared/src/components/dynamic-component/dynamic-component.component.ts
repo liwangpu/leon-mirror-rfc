@@ -27,7 +27,25 @@ export class DynamicComponentComponent implements OnInit, OnDestroy {
     public constructor(
         private injector: Injector,
         private dyc: fromCore.DynamicComponent
-    ) { }
+    ) {
+        this.dyc['registryRender'](() => {
+            if (this.checkPesentationIsInitializable) {
+                this.presentationImplementInitialization();
+            }
+
+            if (this.checkPresentationIsFilterable) {
+                this.presentationImplementFilterable();
+            }
+
+            if (this.checkPresentationIsSubscribe) {
+                this.presentationImplementSubscribe();
+            }
+
+            if (this.checkPresentationIsDataSource) {
+                this.presentationImplementResourceChange();
+            }
+        });
+    }
 
     protected get store(): fromCore.StateStoreService {
         if (!this._store) {
@@ -69,22 +87,6 @@ export class DynamicComponentComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.subs.sink = this.store.previewMode$.subscribe(enable => this.preview = enable);
-
-        if (this.checkPesentationIsInitializable) {
-            this.presentationImplementInitialization();
-        }
-
-        if (this.checkPresentationIsFilterable) {
-            this.presentationImplementFilterable();
-        }
-
-        if (this.checkPresentationIsSubscribe) {
-            this.presentationImplementSubscribe();
-        }
-
-        if (this.checkPresentationIsDataSource) {
-            this.presentationImplementResourceChange();
-        }
     }
 
     private presentationImplementInitialization(): void {

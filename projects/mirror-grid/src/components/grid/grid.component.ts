@@ -42,7 +42,7 @@ export class GridComponent extends fromCore.DynamicComponent implements OnInit, 
     }
 
     public async ngOnInit(): Promise<void> {
-        // this.query();
+        this.render();
         await this.renderChildrent();
     }
 

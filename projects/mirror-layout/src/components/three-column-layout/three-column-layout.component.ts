@@ -30,6 +30,7 @@ export class ThreeColumnLayoutComponent extends fromCore.DynamicComponent implem
     }
 
     public async ngAfterViewInit(): Promise<void> {
+        this.render();
         await super.renderChildrent();
     }
 

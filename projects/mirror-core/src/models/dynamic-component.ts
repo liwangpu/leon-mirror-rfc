@@ -41,6 +41,7 @@ export abstract class DynamicComponent extends MetaDataProvider implements INoti
     private _dyContainer = new Map<string, ViewContainerRef>();
     private _componentDiscoverySrv: fromToken.IComponentDiscovery;
     private _componentDesignDataStore: fromToken.IComponentDesignDataStore;
+    private _renderFn: Function;
     public constructor(
         injector: Injector
     ) {
@@ -76,6 +77,12 @@ export abstract class DynamicComponent extends MetaDataProvider implements INoti
         return this._stateStore;
     }
 
+    public render(): void {
+        if (this._renderFn) {
+            this._renderFn();
+        }
+    }
+
     public async renderChildrent(): Promise<void> {
         await this.renderContentChildren();
         await this.renderButtonChildren();
@@ -101,6 +108,10 @@ export abstract class DynamicComponent extends MetaDataProvider implements INoti
 
     public publishNotify(notify: INotification): void {
         this.opsat.publish(notify);
+    }
+
+    private registryRender(fn: Function): void {
+        this._renderFn = fn;
     }
 
     private checkAndImplementDataSource(): void {

@@ -24,6 +24,7 @@ export class BlankLayoutComponent extends fromCore.DynamicComponent implements A
     }
 
     public async ngAfterViewInit(): Promise<void> {
+        this.render();
         await super.renderChildrent();
     }
 
