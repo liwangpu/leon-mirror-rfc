@@ -3,7 +3,7 @@
     "control": "grid",
     "dataSourceKey": "student",
     "filter": {
-        "grade": "{{gradeId}}"
+        "grade": "{{grade_tree_view.gradeId}}"
     },
     "actions": [
         {

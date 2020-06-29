@@ -7,6 +7,7 @@ import { INotification, notificationType } from './i-notification';
 import { MetaDataProvider } from './meta-data-provider';
 import { INotify } from './i-notify';
 import { IDataSource } from './i-data-source';
+import * as fromStateStore from '../state-store';
 
 function generateResourceChangeNotify(dataSourceKey: string, ids?: Array<string>): INotification {
     return { type: notificationType.resourceChange, source: dataSourceKey, target: ids };
@@ -37,7 +38,7 @@ export function DyContainer(containerId?: string) {
 export abstract class DynamicComponent extends MetaDataProvider implements INotify {
 
     private _opsat: fromService.PageNotifyOpsatService;
-    private _stateStore: fromService.StateStoreService;
+    private _stateStore: fromStateStore.StateStoreService;
     private _dyContainer = new Map<string, ViewContainerRef>();
     private _componentDiscoverySrv: fromToken.IComponentDiscovery;
     private _componentDesignDataStore: fromToken.IComponentDesignDataStore;
@@ -70,22 +71,11 @@ export abstract class DynamicComponent extends MetaDataProvider implements INoti
         return this._opsat;
     }
 
-    protected get stateStore(): fromService.StateStoreService {
+    protected get stateStore(): fromStateStore.StateStoreService {
         if (!this._stateStore) {
-            this._stateStore = this.injector.get(fromService.StateStoreService);
+            this._stateStore = this.injector.get(fromStateStore.StateStoreService);
         }
         return this._stateStore;
-    }
-
-    public render(): void {
-        if (this._renderFn) {
-            this._renderFn();
-        }
-    }
-
-    public async renderChildrent(): Promise<void> {
-        await this.renderContentChildren();
-        await this.renderButtonChildren();
     }
 
     public publishScopeData(data: { [key: string]: any }): void {
@@ -103,11 +93,25 @@ export abstract class DynamicComponent extends MetaDataProvider implements INoti
                 scope[f] = data[f];
             }
         });
-        this.stateStore.setScopeData(scope);
+        // console.log(0, this.metaData,this.key);
+        this.stateStore.setScopeData(this.key, scope);
     }
 
     public publishNotify(notify: INotification): void {
         this.opsat.publish(notify);
+    }
+
+    private async render(): Promise<void> {
+        this.stateStore.setComponentMetaData(this.key, this.metaData);
+        if (this._renderFn) {
+            this._renderFn();
+        }
+        await this.renderChildrent();
+    }
+
+    private async renderChildrent(): Promise<void> {
+        await this.renderContentChildren();
+        await this.renderButtonChildren();
     }
 
     private registryRender(fn: Function): void {

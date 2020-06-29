@@ -24,8 +24,7 @@ export class TabComponent extends DynamicComponent implements AfterViewInit, OnD
     }
 
     public async ngAfterViewInit(): Promise<void> {
-        this.render();
-        await super.renderChildrent();
+
     }
 
     public async ngOnDestroy(): Promise<void> {

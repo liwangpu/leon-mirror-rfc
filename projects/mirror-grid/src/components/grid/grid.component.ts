@@ -42,8 +42,7 @@ export class GridComponent extends fromCore.DynamicComponent implements OnInit, 
     }
 
     public async ngOnInit(): Promise<void> {
-        this.render();
-        await this.renderChildrent();
+
     }
 
     public async onResourceChange(ids?: string[]): Promise<void> {

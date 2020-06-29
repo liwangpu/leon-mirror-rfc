@@ -36,7 +36,6 @@ export class FormComponent extends fromCore.DynamicComponent implements OnInit, 
     }
 
     public async ngOnInit(): Promise<void> {
-        this.render();
         this.grades = await this.resourceDataStore.query('grade').pipe(map(res => res.items.map(x => ({ label: x.name, value: x.id })))).toPromise();
     }
 

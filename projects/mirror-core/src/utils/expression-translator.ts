@@ -1,4 +1,5 @@
 import { ObjectTool } from './object-tool';
+import * as _ from 'lodash';
 
 export function removeDisableFilterExpression(filter: { [key: string]: any }): any {
     iterateFilterExpression(filter, null, filter);
@@ -125,7 +126,7 @@ export class ExpressionTranslator {
             if (dataName && k === dataName) {
                 return data;
             }
-            return ObjectTool.recursionValueByField(data, k);
+            return _.get(data, k);
         });
     }
 

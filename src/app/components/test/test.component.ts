@@ -1,53 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-
-interface IDatasource {
-    create(): Promise<void>;
-}
-
-
-class BaseComponent {
-
-    constructor() {
-
-        let originCreate: Function = this['create'];
-        Object.defineProperty(this, 'create', {
-            value: async function (...args: any[]) {
-                let result = await originCreate.apply(this, args);
-                console.log('after create');
-                return result;
-            }
-        });
-    }
-}
-
-
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-test',
     templateUrl: './test.component.html',
     styleUrls: ['./test.component.scss']
 })
-export class TestComponent extends BaseComponent implements IDatasource {
+export class TestComponent {
 
     constructor() {
-        super();
+        let p: Object = { name: 'Leon', info: { message: 'good', test: { age: 18 } } };
+
+        // console.log(1, p.hasOwnProperty('info.message'));
+        console.log(2, _.has(p, 'info.test.age1'));
     }
 
-    async save() {
-        await this.create();
-    }
-
-    async create(): Promise<void> {
-        await this.doCreate();
-    }
-
-    doCreate(): Promise<string> {
-        return new Promise<string>(res => {
-            setTimeout(() => {
-                console.log('create successfully');
-                res('123');
-            }, 1000);
-        });
+    save() {
+ 
     }
 
 }

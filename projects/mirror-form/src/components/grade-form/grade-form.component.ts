@@ -33,7 +33,7 @@ export class GradeFormComponent extends fromCore.DynamicComponent implements OnI
     }
 
     public async ngOnInit(): Promise<void> {
-        this.render();
+
     }
 
     public async onResourceChange(ids?: string[]): Promise<void> {

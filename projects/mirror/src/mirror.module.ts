@@ -24,7 +24,6 @@ import { TreeViewModule as MirrorTreeViewModule } from '@cxist/mirror-tree-view'
         fromOrion.DynamicDialogModule
     ],
     providers: [
-        fromCore.StateStoreService,
         fromService.PageMetaDataResolverService,
         fromService.ComponentDiscoveryService,
         fromService.PageMetaDataStoreService,

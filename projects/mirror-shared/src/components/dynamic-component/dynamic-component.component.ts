@@ -1,15 +1,17 @@
-import { Component, OnInit, OnDestroy, HostBinding, HostListener, ChangeDetectionStrategy, Injector } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostBinding, HostListener, ChangeDetectionStrategy, Injector, AfterViewInit } from '@angular/core';
 import * as fromCore from '@cxist/mirror-core';
 import { SubSink } from 'subsink';
 import { filter } from 'rxjs/operators';
 import { notificationType } from '@cxist/mirror-core';
+import * as _ from 'lodash';
 
 function satisfyVariables(variables: Array<string>): any {
     return filter(scope => {
         if (!scope) { return false; }
-        return fromCore.ArrayTool.allContain(Object.keys(scope), variables);
+        return variables.every(v => _.has(scope, v));
     });
 }
+
 
 @Component({
     selector: 'mirror-dynamic-component',
@@ -17,7 +19,7 @@ function satisfyVariables(variables: Array<string>): any {
     styleUrls: ['./dynamic-component.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DynamicComponentComponent implements OnInit, OnDestroy {
+export class DynamicComponentComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @HostBinding('class.preview')
     public preview: boolean;
@@ -45,6 +47,16 @@ export class DynamicComponentComponent implements OnInit, OnDestroy {
                 this.presentationImplementResourceChange();
             }
         });
+    }
+
+    public ngOnInit(): void {
+        this.subs.sink = this.store.previewMode$.subscribe(enable => this.preview = enable);
+    }
+
+    public ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.dyc['render']();
+        }, 10);
     }
 
     protected get store(): fromCore.StateStoreService {
@@ -85,41 +97,24 @@ export class DynamicComponentComponent implements OnInit, OnDestroy {
         this.subs.unsubscribe();
     }
 
-    public ngOnInit(): void {
-        this.subs.sink = this.store.previewMode$.subscribe(enable => this.preview = enable);
-    }
+
 
     private presentationImplementInitialization(): void {
         let presentation: fromCore.IInitialize = this.dyc as any;
-        let variables = fromCore.ExpressionTranslator.analyzeExpressionVariable(presentation.initialParameter);
-        if (!variables.length) {
-            presentation.InitialParameterChange(presentation.initialParameter);
-            return;
-        }
-        this.subs.sink = this.store.scopeData$
-            .pipe(satisfyVariables(variables))
-            .subscribe(async scope => {
-                let data = fromCore.ExpressionTranslator.translateStaticVariableExpression(presentation.initialParameter, scope);
-                // console.log('scope', scope, data);
-                await presentation.InitialParameterChange(data);
-            });
+        if (!presentation.initialParameter) { return; }
+        this.subs.sink = this.store.notifyWhenExpressionChange(presentation.initialParameter).subscribe(async data => {
+            // console.log('initial parameter change', data);
+            await presentation.InitialParameterChange(data);
+        });
     }
 
     private presentationImplementFilterable(): void {
         let presentation: fromCore.IFilter = this.dyc as any;
-        let variables = fromCore.ExpressionTranslator.analyzeExpressionVariable(presentation.filterParameter);
-        if (!variables.length) {
-            presentation.filterParameterChange(presentation.filterParameter);
-            return;
-        }
-
-        this.subs.sink = this.store.scopeData$
-            .pipe(satisfyVariables(variables))
-            .subscribe(async scope => {
-                let data = fromCore.ExpressionTranslator.translateStaticVariableExpression(presentation.filterParameter, scope);
-                // console.log('scope', scope, data);
-                await presentation.filterParameterChange(data);
-            });
+        if (!presentation.filterParameter) { return; }
+        this.subs.sink = this.store.notifyWhenExpressionChange(presentation.filterParameter).subscribe(async data => {
+            // console.log('filter parameter change', data);
+            await presentation.filterParameterChange(data);
+        });
     }
 
     private presentationImplementSubscribe(): void {

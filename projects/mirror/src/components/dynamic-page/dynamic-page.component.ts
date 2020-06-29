@@ -31,7 +31,7 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
             });
         this.subs.sink = acr.params
             .subscribe(data => {
-                this.store.setScopeData({ id: data.dataId }, 'params');
+                // this.store.setScopeData({ id: data.dataId }, 'params');
             });
 
         this.subs.sink = acr.queryParams
@@ -41,7 +41,7 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
                 let queryParamKeys = Object.keys(q).filter(x => ['preview'].indexOf(x) === -1);
                 let scope: {} = {};
                 queryParamKeys.forEach(k => scope[k] = q[k]);
-                this.store.setScopeData(scope, 'queryParams');
+                // this.store.setScopeData(scope, 'queryParams');
                 this.store.resetPreviewMode(Boolean(q.preview));
             });
     }

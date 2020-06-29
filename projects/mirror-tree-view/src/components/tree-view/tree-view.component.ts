@@ -55,7 +55,6 @@ export class TreeViewComponent extends fromCore.DynamicComponent implements OnIn
     }
 
     public async ngOnInit(): Promise<void> {
-        this.render();
         this.query();
     }
 
@@ -85,7 +84,6 @@ export class TreeViewComponent extends fromCore.DynamicComponent implements OnIn
             if (!this.selectId) {
                 this.onSelect(this.grades[0]);
             }
-
         });
     }
 

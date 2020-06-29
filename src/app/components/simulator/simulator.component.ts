@@ -53,7 +53,7 @@ export class SimulatorComponent implements OnInit {
 
     public sendScope(): void {
         let { name, value } = this.scopeForm.value;
-        this.store.dispatch(setScopeData({ scope: { [name]: value } }));
+        // this.store.dispatch(setScopeData({ scope: { [name]: value } }));
     }
 
     public sendEvent(): void {
