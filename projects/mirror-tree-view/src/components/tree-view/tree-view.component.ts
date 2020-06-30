@@ -1,6 +1,10 @@
 import { Component, OnInit, forwardRef, Injector } from '@angular/core';
 import * as fromCore from '@cxist/mirror-core';
 
+interface IOnSelect {
+    onSelect(): object;
+}
+
 @Component({
     selector: 'mirror-tree-view',
     templateUrl: './tree-view.component.html',
@@ -54,22 +58,25 @@ export class TreeViewComponent extends fromCore.DynamicComponent implements OnIn
 
     }
 
+    // public onSelect(): object {
+    //     return null;
+    // }
+
     public async ngOnInit(): Promise<void> {
         this.query();
     }
 
     public onSelect(data: any): void {
         this.selectId = data.id;
-
-        let scope = {};
-        fromCore.assignScopeByNotify(scope, data, this.notify.filter(x => x.type === 'select')[0]);
-        this.publishScopeData(scope);
+        // let scope = {};
+        // fromCore.assignScopeByNotify(scope, data, this.notify.filter(x => x.type === 'select')[0]);
+        this.publishScopeData(data, 'nodeSelect');
     }
 
     public onEdit(data: any, button: fromCore.IActionButton): void {
-        let scope = {};
-        fromCore.assignScopeByNotify(scope, data, this.notify.filter(x => x.type === 'edit')[0]);
-        this.publishScopeData(scope);
+        // let scope = {};
+        // fromCore.assignScopeByNotify(scope, data, this.notify.filter(x => x.type === 'edit')[0]);
+        this.publishScopeData(data, 'nodeEdit');
         this.buttonHandler.onClick(button);
     }
 

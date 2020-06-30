@@ -97,8 +97,6 @@ export class DynamicComponentComponent implements OnInit, AfterViewInit, OnDestr
         this.subs.unsubscribe();
     }
 
-
-
     private presentationImplementInitialization(): void {
         let presentation: fromCore.IInitialize = this.dyc as any;
         if (!presentation.initialParameter) { return; }

@@ -10,15 +10,6 @@
         }
     ],
     "notify": [
-        {
-            "source": "id",
-            "type": "select",
-            "target": "gradeId"
-        },
-        {
-            "source": "id",
-            "type": "edit",
-            "target": "edit_gradeId"
-        }
+
     ]
 }

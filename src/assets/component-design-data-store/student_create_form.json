@@ -3,6 +3,6 @@
     "control": "form",
     "dataSourceKey": "student",
     "initialParameter": {
-        "grade": "{{gradeId}}"
+        "grade": "{{grade_tree_view.nodeSelect.id}}"
     }
 }

@@ -3,6 +3,6 @@
     "control": "form",
     "dataSourceKey": "student",
     "initialParameter": {
-        "id": "{{studentId}}"
+        "id": "{{student_list_grid.rowEdit.id}}"
     }
 }

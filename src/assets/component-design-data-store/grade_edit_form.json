@@ -3,6 +3,6 @@
     "control": "grade-form",
     "dataSourceKey": "grade",
     "initialParameter": {
-        "id": "{{edit_gradeId}}"
+        "id": "{{grade_tree_view.nodeEdit.id}}"
     }
 }

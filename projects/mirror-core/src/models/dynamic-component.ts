@@ -78,23 +78,23 @@ export abstract class DynamicComponent extends MetaDataProvider implements INoti
         return this._stateStore;
     }
 
-    public publishScopeData(data: { [key: string]: any }): void {
-        if (!this.notify?.length) { return; }
-        if (!data || typeof data !== 'object' || !Object.keys(data).length) {
-            console.warn(`data必须为非空的object,当前传递的data类型为为:${typeof data},data详细信息为:`, data);
-            return;
-        }
-        let scope: { [key: string]: any } = {};
-        // 发送data 到 scope最后检查,非notify里面的字段不发送
-        let fields = Object.keys(data);
-        fields.forEach(f => {
-            let needNotify = this.metaData.notify.some(x => x.source === f || x.target === f);
-            if (needNotify) {
-                scope[f] = data[f];
-            }
-        });
-        // console.log(0, this.metaData,this.key);
-        this.stateStore.setScopeData(this.key, scope);
+    public publishScopeData(data: { [key: string]: any }, action: string): void {
+        // if (!this.notify?.length) { return; }
+        // if (!data || typeof data !== 'object' || !Object.keys(data).length) {
+        //     console.warn(`data必须为非空的object,当前传递的data类型为为:${typeof data},data详细信息为:`, data);
+        //     return;
+        // }
+        // let scope: { [key: string]: any } = {};
+        // // 发送data 到 scope最后检查,非notify里面的字段不发送
+        // let fields = Object.keys(data);
+        // fields.forEach(f => {
+        //     let needNotify = this.metaData.notify.some(x => x.source === f || x.target === f);
+        //     if (needNotify) {
+        //         scope[f] = data[f];
+        //     }
+        // });
+        // // console.log(0, this.metaData,this.key);
+        this.stateStore.setScopeData(data, this.key, action);
     }
 
     public publishNotify(notify: INotification): void {

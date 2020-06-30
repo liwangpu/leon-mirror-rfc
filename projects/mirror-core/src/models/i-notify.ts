@@ -3,6 +3,6 @@ import { INotification } from './i-notification';
 
 export interface INotify {
     content: Array<IComponentMetaData>;
-    publishScopeData(data: { [key: string]: any }): void;
+    publishScopeData(data: { [key: string]: any }, action: string): void;
     publishNotify(notify: INotification): void;
 }

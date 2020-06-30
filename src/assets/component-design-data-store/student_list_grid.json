@@ -3,7 +3,7 @@
     "control": "grid",
     "dataSourceKey": "student",
     "filter": {
-        "grade": "{{grade_tree_view.gradeId}}"
+        "grade": "{{grade_tree_view.nodeSelect.id}}"
     },
     "actions": [
         {
@@ -20,10 +20,6 @@
         }
     ],
     "notify": [
-        {
-            "source": "id",
-            "type": "edit",
-            "target": "studentId"
-        }
+
     ]
 }

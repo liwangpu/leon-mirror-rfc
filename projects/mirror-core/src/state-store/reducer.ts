@@ -6,17 +6,20 @@ function getScopeData(state: fromState.IStoreState, key: string): { [key: string
     return { ...state.scope[key] };
 }
 
-function updateScopeData(state: fromState.IStoreState, key: string, scope: {}): { [key: string]: any } {
+function updateScopeData(state: fromState.IStoreState, scope: {}, key: string, action?: string): { [key: string]: any } {
     let componentScopeData = getScopeData(state, key);
-    return { ...componentScopeData, ...scope };
+    return { ...componentScopeData, [action]: scope };
 }
 
 export const stateReducer = createReducer({},
     on(fromAction.setPageMetaData, (state: fromState.IStoreState, { pageMetaData }) => {
         return { ...state, pageMetaData };
     }),
-    on(fromAction.setScopeData, (state: fromState.IStoreState, { key, scope }) => {
-        return { ...state, scope: { ...state.scope, [key]: updateScopeData(state, key, scope) } };
+    on(fromAction.setScopeData, (state: fromState.IStoreState, { key, action, scope }) => {
+        if (!key) {
+            return { ...state, scope: { ...state.scope, ...scope } };
+        }
+        return { ...state, scope: { ...state.scope, [key]: updateScopeData(state, scope, key, action) } };
     }),
     on(fromAction.resetScopeData, (state: fromState.IStoreState) => {
         return { ...state, scope: {} };

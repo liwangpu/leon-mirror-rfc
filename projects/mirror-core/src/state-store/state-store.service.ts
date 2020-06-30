@@ -32,8 +32,8 @@ export class StateStoreService {
         this.store.dispatch(fromAction.setPageMetaData({ pageMetaData }));
     }
 
-    public setScopeData(key: string, scope: { [key: string]: any }): void {
-        this.store.dispatch(fromAction.setScopeData({ key, scope }));
+    public setScopeData(scope: { [key: string]: any }, key?: string, action?: string): void {
+        this.store.dispatch(fromAction.setScopeData({ scope, key, action }));
     }
 
     public resetScopeData(from?: string): void {
